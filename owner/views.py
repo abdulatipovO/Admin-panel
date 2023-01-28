@@ -9,6 +9,7 @@ from main.models import *
 
 class HomeView(View):
     def get(self, request):
+        print('salom')
 
         # print(request.user)
         # print(request.user)
