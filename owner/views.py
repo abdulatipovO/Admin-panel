@@ -10,7 +10,7 @@ from main.models import *
 class HomeView(View):
     def get(self, request):
         print('salom')
-
+        print('salom')
         # print(request.user)
         # print(request.user)
         # print(request.user)
@@ -28,7 +28,7 @@ class HomeView(View):
         context ={
             'category':category,
             'weekday' :weekday,
-           
+
         }
 
         return render(request,'index.html', context)
