@@ -19,41 +19,23 @@
               </nav>
             </div>
             <div class="row">
+              {% for s in service %}
               <div class="col-md-4 stretch-card grid-margin">
                 <div class="card bg-gradient-danger card-img-holder text-white">
+                 <a href="#" class="text-white d-flex" style="text-decoration: none;">
                   <div class="card-body">
                     <img src="/static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3">Biznes turi: Category
-                    </h4>
-                    <span>Kompaniya Nomi: </span><h2 class="mb-5">Future coders</h2>
-                    <h6 class="card-text">Hozirda mavjud xonalar soni: 8 ta</h6>
+                    <h3 class="font-weight-normal mb-3">Biznes turi: {{ s.category }}
+                    </h3>
+                    <h3>Kompaniya Nomi: <h2 class="mb-5">{{ s }}</h2></h3>
+                    <h4 class="card-text">Hozirda mavjud xonalar soni: {{ s.service_rooms.count }} ta</h4>
 
                   </div>
+                 </a>
                 </div>
               </div>
-              <div class="col-md-4 stretch-card grid-margin">
-                <div class="card bg-gradient-info card-img-holder text-white">
-                  <div class="card-body">
-                    <img src="/static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3">Biznes turi: Category
-                    </h4>
-                    <span>Kompaniya Nomi: </span><h2 class="mb-5">Future coders</h2>
-                    <h6 class="card-text">Hozirda mavjud xonalar soni: 8 ta</h6>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4 stretch-card grid-margin">
-                <div class="card bg-gradient-success card-img-holder text-white">
-                  <div class="card-body">
-                    <img src="/static/assets/images/dashboard/circle.svg" class="card-img-absolute" alt="circle-image" />
-                    <h4 class="font-weight-normal mb-3">Biznes turi: Category
-                    </h4>
-                    <span>Kompaniya Nomi: </span><h2 class="mb-5">Future coders</h2>
-                    <h6 class="card-text">Hozirda mavjud xonalar soni: 8 ta</h6>
-
-                  </div>
-                </div>
-              </div>
+              {% endfor %}
+              
             </div>
        
               </div>

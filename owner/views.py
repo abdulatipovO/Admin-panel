@@ -9,25 +9,14 @@ from main.models import *
 
 class HomeView(View):
     def get(self, request):
-        print('salom')
-        print('salom')
-        # print(request.user)
-        # print(request.user)
-        # print(request.user)
-        # c = Category.objects.create(name='samavor')
-        # c = Category.objects.create(name='doctor')
-        # c = Category.objects.create(name='kafe')
-        # w = WeekDay.objects.create(day_name='duyshanban jumagacha ',day_number=5)
-        # w = WeekDay.objects.create(day_name='duyshanban shanbagacha',day_number=6)
-        # w = WeekDay.objects.create(day_name='duyshanban yakshanbagacha', day_number=7)
-        # print(c)
-        # print(w)
 
         category = Category.objects.all()
         weekday = WeekDay.objects.all()
+        service = Service.objects.filter(owner=request.user)
         context ={
             'category':category,
             'weekday' :weekday,
+            'service':service
 
         }
 
