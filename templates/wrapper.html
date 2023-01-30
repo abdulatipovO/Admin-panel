@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="/static/assets/boostrap/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/assets/boostrap/bootstrap/css/bootstrap.css">
-  
+
     <link rel="stylesheet" href="/static/assets/css/style.css">
     <!-- End layout styles -->
     <link rel="shortcut icon" href="/static/assets/images/favicon.ico" />
@@ -154,7 +154,7 @@
       <!-- partial -->
       <div class="container-fluid page-body-wrapper">
         <!-- partial:partials/_sidebar.html -->
-        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+        <nav class="sidebar sidebar-offcanvas " id="sidebar">
           <ul class="nav">
             <li class="nav-item nav-profile">
               <a href="#" class="nav-link">
@@ -171,7 +171,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="index.html">
+              <a class="nav-link" href="{% url 'owner:home' %}">
                 <span class="menu-title">Mening bizneslarim</span>
                 <i class="mdi mdi-home menu-icon"></i>
               </a>
@@ -195,13 +195,12 @@
 
         {% block content %}
         {% endblock content %}
-
+<!-- 
         <footer class="footer">
-            <div class="container-fluid d-flex justify-content-between">
-              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © bootstrapdash.com 2021</span>
-              <span class="float-none float-sm-end mt-1 mt-sm-0 text-end"> Free <a href="https://www.bootstrapdash.com/bootstrap-admin-template/" target="_blank">Bootstrap admin template</a> from Bootstrapdash.com</span>
+            <div class="container-fluid d-flex justify-content-center">
+              <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © Future coders 2023</span>
             </div>
-          </footer>
+          </footer> -->
           <!-- partial -->
         </div>
         <!-- main-panel ends -->

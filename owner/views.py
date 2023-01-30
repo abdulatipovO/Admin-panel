@@ -9,18 +9,19 @@ from main.models import *
 
 class HomeView(View):
     def get(self, request):
-
         category = Category.objects.all()
         weekday = WeekDay.objects.all()
-        service = Service.objects.filter(owner=request.user)
         context ={
             'category':category,
             'weekday' :weekday,
-            'service':service
-
         }
-
+        try:
+            service = Service.objects.filter(owner=request.user)
+            context['service'] = service
+        except:
+            pass
         return render(request,'index.html', context)
+
 
 
 class LoginView(View):
@@ -71,4 +72,25 @@ class ServiceView(View):
         service =  service_register(request)
         if service == True:
             return redirect('/')
+        return redirect('/')
+
+class ServiceDetailView(View):
+
+    def get(self, request,pk):
+        category = Category.objects.all()
+        weekday = WeekDay.objects.all()
+        service = Service.objects.get(id=pk)
+        rooms = Room.objects.filter(service=service)
+        context = {
+            'category':category,
+            'weekday':weekday,
+            'service':service,
+            'rooms':rooms,
+        }
+        return render(request,'detail_service.html', context)
+        
+    def post(self, request,pk):
+        service =  service_update(request,pk)
+        if service == True:
+            return redirect(f'/service/{pk}')
         return redirect('/')

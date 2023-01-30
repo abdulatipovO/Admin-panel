@@ -1,0 +1,264 @@
+{% extends 'wrapper.html' %}
+{% block content %}
+
+
+<div class="main-panel">
+    <div class="content-wrapper">
+        <a href="#" class="btn btn-rounded bg-gradient-success text-white mb-3" style="width: 20%; ">Xona qo'shish <i class="mdi mdi-plus-circle-outline"></i></a>
+    <div class="row">
+        <div class="col-md-8 card-scroll" style="overflow-y: scroll; max-height:590px;">
+            
+            {% for r in rooms %}
+            <div class="card mb-3" >
+                <div class="row g-0">
+                  <div class="col-md-4 p-1">
+                    {% for p in  r.room_photos.all %}
+                    <img src="{{ p.image.url }}" width="100%" height="100%" class="img-fluid rounded-start" alt="">
+                   {% endfor %}
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body" style="float: right;">
+                        <div class="card-text mt-2"><i class="mdi mdi-comment-text text-primary "></i> Izohlar soni: {{ r.comments_count }} ta</div>
+                        <div class="card-text mt-2"><i class="mdi mdi-heart text-danger "></i> Yoqdi: 1 ta</div>
+                        <div class="card-text mt-2"><a href="#"><i class="mdi mdi-eye text-primary"></i> Batafsil ma'lumot</a></div>
+                    </div>
+                    <div class="card-body">
+                      <h5 class="card-title">{{ r.name }}</h5>
+                      <h6>Reyting: <i class="mdi mdi-star text-warning"></i><i class="mdi mdi-star text-warning"></i><i class="mdi mdi-star text-warning"></i><i class="mdi mdi-star text-warning"></i></h6>
+                      <h6>Xona egasi: {{ r.owner }}</h6>
+                      <a href="#"><span class="badge bg-gradient-info">Bron qilish</span></a>
+                      <p class="card-text">
+                        <small class="text-danger">18:00 dan 21:00 gacha band</small>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+               <div class="row">
+                <div class="col-md-12">
+                    <div class="center" ><img src="{{ service.image.url }}" width="100%" height="100%" class="img-fluid rounded-start p-2" alt=""></div>
+                    <!-- <img src="{{ service. }}" width="100%" height="100%" class="img-fluid rounded-start p-2" alt=""> -->
+                </div>
+                <div class="col-md-12">
+                    <div class="card-body">
+                        <h4 class="card-text"> <i class="mdi mdi-home-modern text-primary"></i> Kompaniya nomi: <span class="font-weight-bold">{{ service.name }}</span></h4>
+                        <h4 class="card-text"><i class="mdi mdi-cash-multiple text-primary"></i> Biznes turi: <span class="font-weight-bold">{{ service.category }}</span></h4>
+                        <h4 class="card-title"><i class="mdi mdi-map-marker text-primary"></i> Manzil: <span class="font-weight-bold">{{ service.adres }}</h4>
+                        <h5 class="text"><i class="mdi mdi-phone text-primary"></i> Telefon raqam: {{ service.phone }}</h5>
+                        <h5 class="text"><i class="mdi mdi-phone text-primary"></i> Telefon raqam: {{ service.phone_2 }}</h5>
+                        <h5 class="text"><i class="mdi mdi-clock text-primary"></i> Ish vaqti: {{ service.working_time_from | date:'H:i' }}-{{ service.working_time_to | date:'H:i' }} </h4>
+                        {% for days in service.working_days.all %}
+                        <h5 class="text"><i class="mdi mdi-calendar-text text-primary"></i> Ish kunlari: {{ days }}</h5>
+                        {% endfor %}
+                        {%  if service.open_service %}
+                        <h5 class="text">Ish faoliyatidami ?: Ha</h5>
+                        {% else %}
+                        <h5 class="text">Ish faoliyatidami ?: Yo'q</h5>
+                        {% endif %}
+                        <h5 class="text"><i class="mdi mdi-information-outline text-primary"></i> Ma'lumot: {{ service.description }}</h5>
+                        <a href="#" onclick="addBiznes('open')" class="btn btn-inverse-info mt-4">Tahrirlash <i class="mdi mdi-pencil"></i></a>
+                    </div>
+                </div>
+               </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+<div class="container-fluid form-register " >
+    <div class="row ">
+      <div class="col-lg-8 mx-auto">
+        <div class="auth-form-light text-left">
+         
+          <!-- <h4>New here?</h4> -->
+          {% if messages %}
+          {% for message in messages %}
+          <p class="card-title text-danger mb-3">{{ message}}</p>
+          {% endfor %}
+          {% endif %}
+          <div class="close mb-5">
+          <a href="#" onclick="addBiznes('close')" class="text-dark" style="float: right;"><h1><i class="mdi mdi-window-close"></i></h1></a>
+          </div>
+          <h4 class="font-weight-bold mb-4 text-center"><span class="text-primary">{{ service.name }}</span> ma'lumotlarini o'zgartirish</h6>
+            <form class="pt-3" method="post" action="" enctype='multipart/form-data'>
+            {% csrf_token %}  
+            <div class="row">
+              <div class="col-md-6">
+                
+                <div class="form-group">
+                  <label for="floatingSelect"> <h4>Firma Nomi </h4></label>
+                  <input type="text" class="form-control form-control-lg" value="{{ service.name }}" name="name"  required>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="floatingSelect"> <h4>Biznes turi</h4></label>
+                  <select class="form-select p-2" name="category"  required >
+                    {% for c in category %}
+                    {% if c ==  service.category %}
+                      <option selected value="{{ c }}">{{ c }}</option>
+                    {% else %}
+                    <option  value="{{ c }}">{{ c }}</option>
+                    {% endif %}
+                    {% endfor %}
+                  </select>
+               </div>
+              </div>
+            </div>
+            
+
+             <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="floatingAdres"><h4>Firma Manzil</h4></label>
+                  <input type="text" value="{{ service.adres }}" class="form-control form-control-lg" name="adres" required>
+                </div>
+               </div>
+               <div class="col-md-4">
+                 <div class="form-group">
+                   <label for="floatingPhone"> <h4>Telefon raqam</h4></label>
+                   <input type="text" class="form-control form-control-lg" value="{{ service.phone }}" name="phone" required>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="floatingPhone2"> <h4>Zahira Telefon raqam</h4></label>
+                    <input type="text" value="{{ service.phone_2 }}" class="form-control form-control-lg" name="phone_2"required>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="floatingSelect"> <h4> Ish Vaqti Boshlanishi </h4></label>
+                    <input type="time" value="{{ service.working_time_from | date:'H:i' }}" class="form-control form-control-lg" name="working_time_from" required>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="floatingSelect"> <h4> Ish Vaqti Tugashi</h4></label>
+                    <input type="time" value="{{ service.working_time_to | date:'H:i' }}"  class="form-control form-control-lg" name="working_time_to"  required>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="floatingSelect"> <h4>Ish kunlari</h4> </label>
+                    <select  class="form-select" name="working_days"  required >
+                      {% for w in weekday %}
+                      {% for d in service.working_days.all  %}
+                      {% if w == d %}
+                      <option selected value="{{ w }}"> {{ w }}</option>
+                      {% else %}
+                      <option  value="{{ w }}"> {{ w }}</option>
+                      {% endif %}
+                      {% endfor %}
+                      {% endfor %}
+                    </select>
+                 </div>
+                </div>
+              </div>
+              <div class="row">
+              <div class="col-md-6">
+               <div class="form-class">
+                 <label for="floatingPhoto"> <h4>Firma Rasmi</h4></label>
+                 <input type="file" class="form-control"  name="img" >
+               </div>
+               
+              </div>
+              <div class="col-md-6">
+              <div class="form-class">
+                <label for="floatingSelect"> <h4>Firma Haqida</h4></label>
+                <!-- <textarea class="form-control" name="description" rows="4"  id="message"></textarea> -->
+                <input type="text" class="form-control " value="{{ service.description }}" name="description"  required>
+              </div>
+              </div>
+             
+              </div>
+              </div>
+           
+          <div class="row ">
+          <h4 class="text mt-3">Firma hozir ish faoliyatidami ?</h4>
+          {% if service.open_service == True %}
+          <div class="col-md-2 ">
+            <div class="form-check" >
+              <input class="form-check-input" value="1" type="radio" name="open_service" id="flexCheckDefault" checked>
+              <label for="floatingSelect "><h4 >Xa </h4></label>
+          </div>
+        </div>
+         <div class="col-md-2">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="open_service" id="flexRadioDefault2" >
+            <label for="floatingSelect"> <h4>Yo'q </h4></label>
+          </div>
+         </div>
+        {% else %}
+        <div class="col-md-2 ">
+            <div class="form-check" >
+              <input class="form-check-input" value="1" type="radio" name="open_service" id="flexCheckDefault" >
+              <label for="floatingSelect "><h4 >Xa </h4></label>
+          </div>
+        </div>
+         <div class="col-md-2">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="open_service" id="flexRadioDefault2" checked>
+            <label for="floatingSelect"> <h4>Yo'q </h4></label>
+          </div>
+         </div>
+         {% endif %}
+         <div class="col-md-8">
+           <button style="float: right;" type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn" >Saqlash</button>
+         </div>
+      
+      </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    <script>
+        let formRegister = document.querySelector('.form-register');
+        function addBiznes(cmd){
+          if (cmd === 'open'){
+            formRegister.style.display = 'block';
+          }else{
+            formRegister.style.display = 'none';
+          }
+        }
+      </script>
+    <style>
+        .card-scroll::-webkit-scrollbar{
+            display: none;
+        }
+        .form-register{
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        background:  white;
+        opacity: 1;
+        display: none;
+        animation: 1s todown;
+      }
+      @keyframes todown{
+        from{
+          transform:translateY(-800px)
+        }
+        to{
+          transform:translateY(0px)
+        }
+      }
+    </style>
+    
+
+
+
+
+{% endblock content %}

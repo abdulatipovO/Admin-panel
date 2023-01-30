@@ -105,7 +105,7 @@ def service_register(request):
     name = request.POST['name']
     adres = request.POST['adres']
     description = request.POST['description']
-    img = request.POST['img']
+    img = request.FILES['img']
     category = request.POST['category']
     category = Category.objects.filter(name=category)[0]
     phone = request.POST['phone']
@@ -132,3 +132,42 @@ def service_register(request):
     # service = messages.error(request, " hatolik yuzberdi ")  if service  else messages.error(request, " hatolik yuzberdi ")
     service = True if service  else False
     return service
+
+def service_update(request,pk):
+    user = request.user
+    user = User.objects.filter(username=user.username)[0]
+    service = Service.objects.get(id=pk)
+    
+    name = request.POST['name']
+    adres = request.POST['adres']
+    description = request.POST['description']
+    img = request.FILES['img']
+    category = request.POST['category']
+    category = Category.objects.filter(name=category)[0]
+    phone = request.POST['phone']
+    phone_2 = request.POST['phone_2']
+    working_time_from = request.POST['working_time_from']
+    working_time_to = request.POST['working_time_to']
+    working_days = request.POST['working_days']
+    # working_day = WeekDay.objects.filter(day_name=working_days)[0]
+    open_service = request.POST['open_service']
+    open_service = True if open_service == '1' else False
+
+    service.owner=user
+    service.name=name
+    service.adres=adres
+    service.description=description
+    service.category=category
+    service.phone=phone
+    service.phone_2=phone_2
+    service.working_time_from=working_time_from
+    service.working_time_to=working_time_to
+    service.open_service=open_service
+
+    # service.working_days.update(day_name = working_day.day_name)
+    service.image = img
+    service.working_days.update(day_name = working_days)
+    # service = messages.error(request, " hatolik yuzberdi ")  if service  else messages.error(request, " hatolik yuzberdi ")
+    service.save()
+
+    return True
