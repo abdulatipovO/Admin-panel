@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from .tools import *
 from main.models import *
+from .decorators import deco_login
+
 
 
 # Create your views here.
@@ -66,7 +68,6 @@ class IntroView(View):
 
 
 class ServiceView(View):
-    
 
     def post(self,request):
         service =  service_register(request)
@@ -94,3 +95,39 @@ class ServiceDetailView(View):
         if service == True:
             return redirect(f'/service/{pk}')
         return redirect('/')
+
+
+class RoomView(View):
+
+    def post(self,request ,pk):
+        room  = room_create(request ,pk)
+        if room == True:
+            return redirect(f'/service/{pk}')
+        return redirect(f'/service/{pk}')
+
+
+
+class RoomUpdateView(View):
+    @deco_login
+    def get(self,request,pk):
+        room = Room.objects.get(id=int(pk))
+        # image = room.room_photos.all()
+        context = {'room':room,
+                   }
+        return render(request,'room_parametr.html',context)
+    def post(self,request,pk):
+        update = room_update(request,pk)
+        if update:
+            return redirect(f"/room/update/{pk}")
+        img  =  img_create(request,pk)
+        if img:
+            return redirect(f"/room/update/{pk}")
+        return redirect(f"/room/update/{pk}")
+
+class BronView(View):
+    def get(self,request):
+        brons = Bron.objects.all()
+        context  = {
+            "brons":brons
+        }
+        return render(request, 'bron.html', context)

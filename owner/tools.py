@@ -171,3 +171,49 @@ def service_update(request,pk):
     service.save()
 
     return True
+
+def room_create(request,pk):
+    service = Service.objects.get(id = int(pk))
+    name =request.POST['name']
+    size =request.POST['size']
+    owner =request.POST['owner']
+    adres =request.POST['adres']
+    description =request.POST['description']
+    room = Room.objects.create(
+        service=service,
+        name=name,
+        size=size,
+        owner=owner,
+        adres=adres,
+        description=description
+
+    )
+    room = True if room else False
+    return room
+
+def room_update(request,pk):
+    try:
+        name =request.POST['name']
+        size =request.POST['size']
+        owner =request.POST['owner']
+        adres =request.POST['adres']
+        room = Room.objects.get(id = int(pk))
+        room.name = name
+        room.size = size
+        room.owner = owner
+        room.adres = adres
+        room.save()
+        return True
+    except:
+        return False
+def img_create(request,pk):
+    try:
+        image = request.FILES['image']
+        room = Room.objects.get(id=int(pk))
+        # room =  room.room_photos.create(image=image)
+        room  = RoomPhotos.objects.create(room=room, image=image)
+        print(room)
+        if room :
+            return True
+    except:
+        return False

@@ -14,5 +14,9 @@ urlpatterns = [
     path('verification', VerificationView.as_view(), name='verification'),
     path('service' , ServiceView.as_view(),name = 'service'),
     path('service/<int:pk>' , ServiceDetailView.as_view(),name = 'service_detail'),
+    path('room_create/<int:pk>' , RoomView.as_view(),name = 'room_create'),
+    path('room/<int:pk>',RoomView.as_view(),name = 'room'),
+    path('room/update/<int:pk>',RoomUpdateView.as_view(),name = 'room_update'),
+    path('brons',BronView.as_view(),name = 'brons')
 
 ]

@@ -1,0 +1,131 @@
+{% extends 'wrapper.html' %}
+{% block content %}
+{% comment %}
+    <div class="row col-12">
+
+      <div class="col-lg-6 grid-margin stretch-card" >
+        <div class="card" style="width: 18rem;">
+          <form action="" method="post" class="form">
+            {% csrf_token %}
+            <h3>Xonani O'zartirish </h3>
+          <div class="col-md-6">
+            <div class="form-class">
+
+              <label for="floatingSelect" > <h4> Xona Raqami </h4></label>
+             <input type="text" value="{{room.name}}" class=" form-control form-control-lg btn-secondary" data-id="{{room.name}}"  name="name" required> 
+            </div>
+           </div>
+           <div class="col-md-6">
+            <div class="form-class">
+              <label for="floatingSelect"> <h3> Odam sigimi  </h3></label>
+              <input type="number" value="{{room.size}}" class="form-control form-control-lg btn-secondary" name="size" required>
+            </div>
+            <div class="form-class">
+              <label for="floatingSelect"> <h3> Masul Shahs  </h3></label>
+              <input type="text" value="{{room.owner}}" class="form-control form-control-lg btn-secondary" name="owner" required>
+            </div>
+           </div> 
+           <div class="col-md-6">
+            <div class="form-class">
+              <label for="floatingSelect"> <h3> Xona Mazili </h3></label>
+              <input type="text" value="{{room.adres}}" class="form-control form-control-lg  btn-secondary" name="adres" required>
+            </div>
+           </div>
+
+            <div class="col-md-6">
+            <div class="form-class">
+              <button type="submit"class=" btn btn-block btn-lg btn-gradient-primary mt-4">Yangilash </button>
+            </div>
+          </form>
+           </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 grid-margin stretch-card" >
+        <div class="card" style="width: 18rem;">
+          <form action="" method="post" class="form">
+            <h3>Xonani Rasmi</h3>
+ 
+
+           <div class="col-md-6">
+            <div class="form-class">
+              <img src="/static/assets/images/hero-img.png" width="270px" alt="">
+           </div>
+           </div>
+
+
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-6 grid-margin stretch-card" >
+        <div class="card" style="width: 18rem;">
+          <form action="" method="post" class="form" enctype='multipart/form-data'>{% csrf_token %}
+            <h3>Rasm Qoshish  </h3>
+          <div class="col-md-6">
+            <div class="form-class">
+              <label for="floatingSelect" > <h4> Rasm </h4></label>
+             <input type="file" class="form-control form-control-lg"  name="image" required> 
+            </div>
+           </div>
+
+            <div class="col-md-6">
+            <div class="form-class">
+
+              <button type="submit" class="btn btn-block btn-lg btn-gradient-primary mt-4">Rasm Qoshish </button>
+            </div>
+          </form>
+           </div>
+        </div>
+      </div>
+      <div class="col-lg-6 grid-margin stretch-card" >
+        <div class="card" style="width: 18rem;">
+            <h3>Xonani Rasmi</h3>
+            
+            {% for i in room.room_photos.all %}
+
+            {{forloop.counter}}
+           <div class="col-md-6">
+            <div class="form-class">
+              <img src="{{ i.image.url }}" width="270px" alt="">
+           </div>
+           </div>
+           {% endfor %}
+
+
+        </div>
+      </div>
+
+
+    </div>
+
+    {% endcomment %}
+
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card bg-warning">  
+        <img src="/media/room_photos/2E2ELXUN4VOEFCS56IONGAC3EE.webp" alt="">
+        <div class="card-body">
+          <h1 class="card-title text-center">Xonani nomi: {{ room.name }}</h1>
+          <h1 class="card-title text-center">Mas'ul shaxs: {{ room.owner }}</h1>
+          <h1 class="card-title text-center">Manzil: {{ room.adres }}</h1>
+          <h1 class="card-title text-center">Sig'im: {{ room.size }}</h1>
+          <h1 class="card-title text-center"></h1>
+          <label for="info">Xona haqida ma'lumot</label>
+          <textarea name="description" id="info" cols="30" rows="10">{{ room.description }}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card bg-danger">
+        <h4>hihi</h4>
+        <form action="">
+          
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

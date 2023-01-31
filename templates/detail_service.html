@@ -4,7 +4,7 @@
 
 <div class="main-panel">
     <div class="content-wrapper">
-        <a href="#" class="btn btn-rounded bg-gradient-success text-white mb-3" style="width: 20%; ">Xona qo'shish <i class="mdi mdi-plus-circle-outline"></i></a>
+        <a href="#" onclick="addBiznes('open_room')" class="btn btn-rounded bg-gradient-success text-white mb-3" style="width: 20%; ">Xona qo'shish <i class="mdi mdi-plus-circle-outline"></i></a>
     <div class="row">
         <div class="col-md-8 card-scroll" style="overflow-y: scroll; max-height:590px;">
             
@@ -12,15 +12,13 @@
             <div class="card mb-3" >
                 <div class="row g-0">
                   <div class="col-md-4 p-1">
-                    {% for p in  r.room_photos.all %}
-                    <img src="{{ p.image.url }}" width="100%" height="100%" class="img-fluid rounded-start" alt="">
-                   {% endfor %}
+                    <img src="{{  r.room_photos.all.0.image.url }}" width="100%" height="100%" class="img-fluid rounded-start" alt="">
                   </div>
                   <div class="col-md-8">
                     <div class="card-body" style="float: right;">
                         <div class="card-text mt-2"><i class="mdi mdi-comment-text text-primary "></i> Izohlar soni: {{ r.comments_count }} ta</div>
                         <div class="card-text mt-2"><i class="mdi mdi-heart text-danger "></i> Yoqdi: 1 ta</div>
-                        <div class="card-text mt-2"><a href="#"><i class="mdi mdi-eye text-primary"></i> Batafsil ma'lumot</a></div>
+                        <div class="card-text mt-2"><a href="{% url  'owner:room_update' r.id  %}"><i class="mdi mdi-eye text-primary"></i> Batafsil ma'lumot</a></div>
                     </div>
                     <div class="card-body">
                       <h5 class="card-title">{{ r.name }}</h5>
@@ -221,13 +219,70 @@
         </div>
       </div>
     </div>
+
+
+<div class="container-fluid form-register room_add">
+  <div class="row">
+    <div class="col-md-6  stretch-card" style="margin: 0 auto; float: none;">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title text-center">Xona qo'shish</h4>
+          <p class="card-description">  </p>
+          <form class="forms-sample" method="post" action="{% url 'owner:room_create' service.id %}">
+            {% csrf_token %}
+            <div class="form-group row">
+              <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Xona nomi</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="name" id="exampleInputUsername2" placeholder="Xona nomi (1-xona)">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Xona egasi</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="owner" id="exampleInputEmail2" placeholder="Xona egasi">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="exampleInputMobile" class="col-sm-3 col-form-label">Manzil</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="adres" id="exampleInputMobile" placeholder="Manzil">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="exampleInputPassword2" class="col-sm-3 col-form-label">O'lchami (ixtiyoriy)</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="size" id="exampleInputPassword2" placeholder="O'lchami">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Xona haqida</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" name="description" id="exampleInputConfirmPassword2" placeholder="info">
+              </div>
+            </div>
+          
+            <a href="#" onclick="addBiznes('close_room')" class="btn btn-light">Orqaga</a>
+            <button type="submit" class="btn btn-gradient-primary me-2">Qo'shish</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
     <script>
         let formRegister = document.querySelector('.form-register');
+        let roomAdd = document.querySelector('.room_add');
         function addBiznes(cmd){
           if (cmd === 'open'){
+            // roomAdd.style.display = 'none';
             formRegister.style.display = 'block';
-          }else{
+          }else if(cmd === 'close'){
             formRegister.style.display = 'none';
+            // roomAdd.style.display = 'block';
+          }else if(cmd === 'open_room'){
+            roomAdd.style.display = 'block';
+          }else if(cmd === 'close_room'){
+            roomAdd.style.display = 'none';
           }
         }
       </script>
