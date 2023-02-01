@@ -7,7 +7,7 @@
         <div class="card" style="width: 18rem;">
           <form action="" method="post" class="form">
             {% csrf_token %}
-            <h3>Xonani O'zartirish </h3>
+            <h3>Xonani O'zgartirish </h3>
           <div class="col-md-6">
             <div class="form-class">
 
@@ -70,7 +70,6 @@
 
             <div class="col-md-6">
             <div class="form-class">
-
               <button type="submit" class="btn btn-block btn-lg btn-gradient-primary mt-4">Rasm Qoshish </button>
             </div>
           </form>
@@ -101,7 +100,8 @@
     {% endcomment %}
 
 
-<div class="container-fluid">
+<!-- <div class="container-fluid">
+  
   <div class="row">
     <div class="col-md-6">
       <div class="card bg-warning">  
@@ -126,6 +126,171 @@
       </div>
     </div>
   </div>
+</div> -->
+
+
+<!-- Example -->
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<div class="container py-3">
+  <!-- Card Start -->
+  <div class="card-bg">
+  <div class="row ">
+      <div class="col-md-6 px-3 card" style="margin: 0 auto; float: none;">
+        <div id="CarouselTest" class="carousel slide" data-ride="carousel">
+          <ol class="carousel-indicators">
+            <li data-target="#CarouselTest" data-slide-to="0" class="active"></li>
+            <li data-target="#CarouselTest" data-slide-to="1"></li>
+            <li data-target="#CarouselTest" data-slide-to="2"></li>
+            
+          </ol>
+          <div class="carousel-inner mt-3">
+            {% for i in room.room_photos.all %}
+            {% if forloop.first %}
+            <div class="carousel-item active">
+            {% else %}
+            <div class="carousel-item">
+            {% endif %}
+              <img class="d-block" src="{{ i.image.url }}" alt="">
+            </div>
+            {% endfor %}
+            
+            <a class="carousel-control-prev" href="#CarouselTest" role="button" data-slide="prev">
+              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span class="sr-only"></span>
+            </a>
+            <a class="carousel-control-next" href="#CarouselTest" role="button" data-slide="next">
+              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="sr-only"></span>
+          </a>
+          </div>
+        </div>
+        <form action="" method="post" class="form" enctype='multipart/form-data'>{% csrf_token %}
+          <button  class="btn btn-gradient-info ml-5"  onclick="document.getElementById('getFile').click()">Rasm qo'shish <i class="icon-lg mdi mdi-library-plus"></i></button>
+          <input type='file' id="getFile" name="image" style="display:block">
+          <button type="submit" class="btn btn-gradient-success   ml-5">Yuklash <i class="icon-lg mdi mdi-upload"></i></button>
+        </form>
+        <!-- <div class="card-"> -->
+          <!-- <div class="card"> -->
+            <div class="card-body">
+              <form class="forms-sample" method="post" action="">
+                {% csrf_token %}
+                <div class="form-group row">
+                  <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Xona nomi</label>
+                  <div class="col-sm-9">
+                    <input type="text" value="{{ room.name }}" class="form-control" name="name" id="exampleInputUsername2" placeholder="Xona nomi (1-xona)">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="exampleInputEmail2" class="col-sm-3 col-form-label">Xona egasi</label>
+                  <div class="col-sm-9">
+                    <input type="text" value="{{ room.owner }}" class="form-control" name="owner" id="exampleInputEmail2" placeholder="Xona egasi">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="exampleInputMobile" class="col-sm-3 col-form-label">Manzil</label>
+                  <div class="col-sm-9">
+                    <input type="text" value="{{ room.adres }}" class="form-control" name="adres" id="exampleInputMobile" placeholder="Manzil">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="exampleInputPassword2" class="col-sm-3 col-form-label">O'lchami </label>
+                  <div class="col-sm-9">
+                    <input type="text" value="{{ room.size }}" class="form-control" name="size" id="exampleInputPassword2" placeholder="O'lchami">
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label for="exampleInputConfirmPassword2" class="col-sm-3 col-form-label">Xona haqida</label>
+                  <div class="col-sm-9">
+                    <textarea name="description" id="" class="form-control" cols="30" rows="4">{{ room.description }}</textarea>
+                  </div>
+                </div>
+              
+                <a href="#" class="btn btn-gradient-success">Bron qilish</a>
+                <button type="submit" class="btn btn-gradient-primary me-2">O'zgartirish</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+  
+      <!-- End of carousel -->
+    </div>
+  </div>
+  
+  <!-- End of card -->
+
 </div>
+
+
+
+<style>
+  body {
+  background-color:  #eee;
+}
+.title {
+ 
+    margin-bottom: 50px;
+    text-transform: uppercase;
+}
+
+.card-block {
+    font-size: 1em;
+    position: relative;
+    margin: 0;
+    padding: 1em;
+    border: none;
+    border-top: 1px solid rgba(34, 36, 38, .1);
+    box-shadow: none;
+     
+}
+.card-bg{
+  background: #eee;
+}
+.card {
+    font-size: 1em;
+    overflow: hidden;
+    padding: 5;
+    border: none;
+    border-radius: .28571429rem;
+    /* box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5; */
+    margin-top:20px;
+}
+
+.carousel-indicators li {
+    border-radius: 12px;
+    width: 12px;
+    height: 12px;
+    background-color: #404040;
+}
+.carousel-indicators li {
+    border-radius: 12px;
+    width: 12px;
+    height: 12px;
+    background-color: #404040;
+}
+.carousel-indicators .active {
+    background-color: white;
+    max-width: 12px;
+    margin: 0 3px;
+    height: 12px;
+}
+.carousel-control-prev-icon {
+ background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E") !important;
+}
+
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23fff' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E") !important;
+}
+
+
+.btn {
+  margin-top: auto;
+}
+</style>
 
 {% endblock %}

@@ -213,6 +213,8 @@ def img_create(request,pk):
         # room =  room.room_photos.create(image=image)
         room  = RoomPhotos.objects.create(room=room, image=image)
         print(room)
+        print(image)
+        print(room)
         if room :
             return True
     except:

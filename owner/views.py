@@ -116,12 +116,16 @@ class RoomUpdateView(View):
                    }
         return render(request,'room_parametr.html',context)
     def post(self,request,pk):
+        print(pk)
+        print(pk)
+        print(pk)
         update = room_update(request,pk)
         if update:
             return redirect(f"/room/update/{pk}")
         img  =  img_create(request,pk)
         if img:
             return redirect(f"/room/update/{pk}")
+        print("xatooooo")
         return redirect(f"/room/update/{pk}")
 
 class BronView(View):
