@@ -12,7 +12,14 @@
             <div class="card mb-3" >
                 <div class="row g-0">
                   <div class="col-md-4 p-1">
+                   <div class="foto-detail p-2"  >
+                    {% if r.room_photos.all.0.image.url %}
                     <img src="{{  r.room_photos.all.0.image.url }}" width="100%" height="100%" class="img-fluid rounded-start" alt="">
+                    {% else %}
+                    <img src="/media/room_photos/7bcb2df2c6c93fb062bb90efaeb5ea9c.jpg"  class="img-fluid rounded-start" alt="">
+
+                    {% endif %}
+                   </div>
                   </div>
                   <div class="col-md-8">
                     <div class="card-body" style="float: right;">
