@@ -7,20 +7,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
+<div class="main-panel p-5 ">
 
-<div class="container p-5 ">
-  <!-- Card Start -->
-  <div class="card-bg">
-  <div class="row ">
-      <div class="col-md-6 card ">
-        <div id="CarouselTest" class="carousel slide" data-ride="carousel">
+<!-- <div class="container "> -->
+
+  <div class="row " >
+
+     <div class="col-md-6 ">
+      <div class="card">
+    
+        <div id="CarouselTest" class="carousel slide " data-ride="carousel">
+
           <ol class="carousel-indicators">
             <li data-target="#CarouselTest" data-slide-to="0" class="active"></li>
             <li data-target="#CarouselTest" data-slide-to="1"></li>
             <li data-target="#CarouselTest" data-slide-to="2"></li>
-            
           </ol>
-          <div class="carousel-inner mt-3">
+
+          <div class="carousel-inner">
             {% for i in room.room_photos.all %}
 
             {% if forloop.first %}
@@ -45,14 +49,14 @@
           </a>
           </div>
         </div>
-        <form action="" method="post" class="form mt-3 p-3" style="margin-left: 3%;" enctype='multipart/form-data'>{% csrf_token %}
-          <!-- <button  class="btn btn-gradient-info ml-5"  onclick="document.getElementById('getFile').click()">Rasm qo'shish <i class="icon-lg mdi mdi-library-plus"></i></button> -->
-          <input type='file' id="getFile" name="image" >
-          <button type="submit" class="btn btn-gradient-success   ml-5">Yuklash <i class="icon-lg mdi mdi-upload"></i></button>
-        </form>
-        <!-- <div class="card-"> -->
-          <!-- <div class="card"> -->
+        </div>
+
+          <div class="card">
             <div class="card-body">
+              <form action="" method="post" class="form mb-5" enctype='multipart/form-data'>{% csrf_token %}
+                <input type='file' id="getFile" name="image" >
+                <button type="submit" class="btn btn-gradient-success   ml-5">Yuklash <i class="icon-lg mdi mdi-upload"></i></button>
+              </form>
               <form class="forms-sample" method="post" action="">
                 {% csrf_token %}
                 <div class="form-group row">
@@ -90,33 +94,59 @@
                 <button type="submit" class="btn btn-gradient-primary me-2">O'zgartirish</button>
               </form>
             </div>
-          </div>
-        </div>
-      
-      <div class="col-md-6 card">
-        <form action="" class="form mt-3 p-3">
-          <div class="form-group">
-            <label for="exampleFormControlSelect2">Default select</label>
-            <select class="form-control" id="exampleFormControlSelect2">
-              <option>1</option>
-
-            </select>
-          </div>
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label">Date of Birth</label>
-            <div class="col-sm-9">
-              <input class="form-control" placeholder="dd/mm/yyyy" />
-            </div>
-          </div>
-        </form>
       </div>
-
-
-      </div>
-
-  
-      <!-- End of carousel -->
     </div>
+    
+    <div class="col-md-6 ">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">1-xonani Bron qilish</div>
+          <form action="" class="form mt-3 p-3">
+            <div class="form-group">
+              <label for="exampleFormControlSelect2"><h5>Bron qiluvchi</h5></label>
+              <select class="form-control" id="exampleFormControlSelect2">
+                <option>1</option>
+
+              </select>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="date_"> <h5>Sanani tanlang</h5></label>
+                  <input type="date" id="date_" class="form-control form-control-lg" name="date" required>
+                </div>
+              </div>
+
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="timefrom"> <h5>Soat 00:00 dan  </h5></label>
+                  <input type="time" id="timefrom" class="form-control form-control-lg" name="working_time_from" required>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <label for="timeto"> <h5> Soat 00:00 gacha</h5></label>
+                  <input type="time" id="timeto" class="form-control form-control-lg" name="working_time_to"  required>
+                </div>
+              </div>
+          </div>
+            
+            
+          </div>
+
+            </div>
+            
+          </form>
+        </div>
+        </div>
+      </div>
+      
+    </div>
+
+
+
+
+  </div>
   </div>
   
   <!-- End of card -->
@@ -129,32 +159,6 @@
 <style>
   body {
   background-color:  #eee;
-}
-.title {
-    margin-bottom: 50px;
-    text-transform: uppercase;
-}
-
-.card-block {
-    font-size: 1em;
-    position: relative;
-    margin: 0;
-    padding: 1em;
-    border: none;
-    border-top: 1px solid rgba(34, 36, 38, .1);
-    box-shadow: none;
-}
-.card-bg{
-  background: #eee;
-}
-.card {
-    font-size: 1em;
-    overflow: hidden;
-    padding: 5;
-    border: none;
-    border-radius: .28571429rem;
-    /* box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5; */
-    margin-top:20px;
 }
 
 .carousel-indicators li {

@@ -48,7 +48,6 @@ class Service(models.Model):
     open_service = models.BooleanField(default=False)
     comments_count = models.PositiveIntegerField(default=0)
 
-
     def __str__(self) -> str:
         return self.name
 
