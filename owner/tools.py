@@ -225,6 +225,7 @@ def addBron(request,pk):
     print(room_id)
     print(room_id)
     print(room_id)
+    print('test')
     room = Room.objects.filter(id=room_id)[0]
     customer = request.user
     name = request.POST['name']
@@ -241,5 +242,5 @@ def addBron(request,pk):
         time_from=time_from,
         time_to=time_to,
         date=date
-        )    
+        )
     return bron
