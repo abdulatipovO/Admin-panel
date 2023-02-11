@@ -1,0 +1,82 @@
+{% extends 'wrapper.html' %}
+
+{% block li %}
+
+{% endblock  %}
+
+{% block content %}
+
+<div class="main-panel">
+  <div class="content-wrapper">
+
+<div class="row">
+  <div class="col-md-6 " style='margin:0 auto; float:left;'>
+    <div class="card">
+      <div class="card-body">
+        <div class="card-title"> Bron qilish</div>
+        <form action="{% url 'owner:add_bron' pk %}" method='post' class="form mt-3 p-3">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="exampleFormControlSelect2"><h5>Bron qilmoqchi bo'lgan xonani tanlang </h5></label>
+            <select class="form-control" name='room' id="exampleFormControlSelect2">
+              {% for r in rooms %}
+              <option value="{{ r.id }}">{{ r.name }}</option>
+              {% endfor %}
+
+            </select>
+          </div>
+          <div class="form-group">
+            <label > <h5>Ismi</h5></label>
+            <input type="input"  class="form-control form-control-lg" name="name" required>
+          </div>
+          <div class="form-group">
+            <label > <h5>Telefon raqam</h5></label>
+            <input type="input"  class="form-control form-control-lg" name="phone" required>
+          </div>
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="date_"> <h5>Sanani tanlang</h5></label>
+                <input type="date" id="date_" class="form-control form-control-lg" name="date" required>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="timefrom"> <h5>00:00 dan  </h5></label>
+                <input type="time" id="timefrom" class="form-control form-control-lg" name="bron_time_from" required>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                <label for="timeto"> <h5>00:00 gacha</h5></label>
+                <input type="time" id="timeto" class="form-control form-control-lg" name="bron_time_to"  required>
+              </div>
+            </div>
+        </div>
+        <!-- <div class="form-group">
+          <label for="exampleFormControlSelect2"><h5>Bekor qiluvchi</h5></label>
+          <select class="form-control" id="exampleFormControlSelect2">
+            <option>Owner</option>
+            <option>Customer</option>
+          </select>
+        </div> -->
+
+
+      </div>
+      <div class="text-left">
+        <button type="submit" class="btn btn-gradient-warning">Bron qilish</button>
+      </div>
+
+          </div>
+          
+        
+        
+        </form>
+      </div>
+</div>
+
+      </div>
+      </div>
+
+{% endblock content %}

@@ -1,0 +1,21 @@
+{% extends 'wrapper.html' %}
+
+{% block li %}
+
+{% endblock  %}
+
+{% block content %}
+<div class="main-panel">
+    <div class="content-wrapper">
+
+        <div class="card">
+            {% for b in brons %}
+            <div class="card-title">{{ b }}</div>
+            {% endfor %}
+        </div>
+
+</div>
+</div>
+
+
+{% endblock %}

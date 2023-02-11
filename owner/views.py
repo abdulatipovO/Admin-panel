@@ -129,9 +129,36 @@ class RoomUpdateView(View):
         return redirect(f"/room/update/{pk}")
 
 class BronView(View):
-    def get(self,request):
-        brons = Bron.objects.all()
+    def get(self,request,pk ):
+        rooms = Room.objects.filter(service=pk)
+        print(rooms)
+        l = []
+        for r in rooms:
+            bron = Bron.objects.filter(room=r.id).filter(date='2023-02-09')
+            l.append(bron)
+            
         context  = {
-            "brons":brons
+            "brons":l
         }
-        return render(request, 'bron.html', context)
+        
+        
+        return render(request, 'bron_list.html', context)
+    
+    
+class BronAddView(View):
+    def get(self, request,pk):
+        room =  Room.objects.filter(service=pk)
+        context = {
+            "rooms":room,
+            "pk":pk
+        }
+        return render(request, 'add_bron.html', context)
+    
+    def post(self, request,pk):
+        
+        bron = addBron(request,pk)
+        if bron:
+            print("create")
+            return redirect('/')
+        print('not create')
+        return redirect('/')

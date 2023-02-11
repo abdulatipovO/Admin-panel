@@ -60,6 +60,9 @@ class Room(models.Model):
     description = models.TextField("Xona xaqida" , blank=True)
     rating = models.IntegerField(default=0)
     comments_count = models.PositiveIntegerField(default=0)
+    
+    def __str__(self) -> str:
+        return self.name
 
 class RoomPhotos(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_photos')
@@ -78,7 +81,15 @@ class Bron(models.Model):
     time_to = models.TimeField(blank=True)
     status = models.CharField("Statusi",choices=BronStatus.choices, max_length=20,default=BronStatus.waiting)
     canceller = models.CharField("Bronni bekor qiluvchi",choices=CancellerType.choices,
-     max_length=20,blank=True)
-    cancel_date = models.DateTimeField(blank=True)
+    max_length=20,blank=True, null=True)
+    cancel_date = models.DateTimeField(blank=True, null=True)
+    name = models.CharField("Kimni nomiga", max_length=50, null=True, blank=True)
+    phone = models.CharField("Telefon raqami", max_length=13, null=True, blank=True)
     reg_date = models.DateTimeField(auto_now_add=True)
+
+
+
     
+
+
+

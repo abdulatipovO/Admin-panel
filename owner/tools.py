@@ -219,3 +219,27 @@ def img_create(request,pk):
             return True
     except:
         return False
+    
+def addBron(request,pk):
+    room_id = request.POST['room']
+    print(room_id)
+    print(room_id)
+    print(room_id)
+    room = Room.objects.filter(id=room_id)[0]
+    customer = request.user
+    name = request.POST['name']
+    phone = request.POST['phone']
+    time_from = request.POST['bron_time_from']
+    time_to = request.POST['bron_time_to']
+    date = request.POST['date']
+
+    bron = Bron.objects.create(
+        room=room,
+        customer = customer,
+        name=name,
+        phone=phone,
+        time_from=time_from,
+        time_to=time_to,
+        date=date
+        )    
+    return bron

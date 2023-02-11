@@ -1,4 +1,21 @@
 {% extends 'wrapper.html' %}
+
+{% block li %}
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'owner:add_bron' service.id %}">
+    <span class="menu-title">Bron qilish</span>
+    <i class="mdi mdi-home menu-icon"></i>
+  </a>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'owner:brons' service.id %}">
+    <span class="menu-title">Bron qilinganlar</span>
+    <i class="mdi mdi-home menu-icon"></i>
+  </a>
+</li> 
+{% endblock  %}
+
+
 {% block content %}
 
 
