@@ -227,14 +227,18 @@ def addBron(request,pk):
     name = request.POST['name']
     phone = request.POST['phone']
     time_from = request.POST['bron_time_from']
+
     time_to = request.POST['bron_time_to']
     date = request.POST['date']
-    bron   = Bron.objects.filter(
-                               Q(room=room,date=date,time_from__gte=time_from,time_to__lte= time_to)
-                              |Q(room=room,date=date,time_from__lte=time_from,time_to__gte= time_to)
-                            #   |Q(room=room,date=date, time_from__lte=time_from,time_to__lte= time_to )
-                              )# ozgina chalasi bor
-    if bron :
+
+
+
+    bron = Bron.objects.filter(
+                               Q(room=room,date=date, time_from__range=(time_from[:4]+'1',time_to) )
+                               |Q(room=room,date=date, time_to__range=(time_from[:4]+'1',time_to) )
+                              )
+
+    if bron:
         bron = Bron.objects.filter(room=room,date=date)
         return bron
     bron = Bron.objects.create(
