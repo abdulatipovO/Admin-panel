@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from customer.utils import CreateVerificationCode
 from django.contrib import messages
-
+from django.db.models import Q
 
 
 def register_(request):
@@ -219,13 +219,9 @@ def img_create(request,pk):
             return True
     except:
         return False
-    
+
 def addBron(request,pk):
     room_id = request.POST['room']
-    print(room_id)
-    print(room_id)
-    print(room_id)
-    print('test')
     room = Room.objects.filter(id=room_id)[0]
     customer = request.user
     name = request.POST['name']
@@ -233,7 +229,14 @@ def addBron(request,pk):
     time_from = request.POST['bron_time_from']
     time_to = request.POST['bron_time_to']
     date = request.POST['date']
-
+    bron   = Bron.objects.filter(
+                               Q(room=room,date=date,time_from__gte=time_from,time_to__lte= time_to)
+                              |Q(room=room,date=date,time_from__lte=time_from,time_to__gte= time_to)
+                            #   |Q(room=room,date=date, time_from__lte=time_from,time_to__lte= time_to )
+                              )# ozgina chalasi bor
+    if bron :
+        bron = Bron.objects.filter(room=room,date=date)
+        return bron
     bron = Bron.objects.create(
         room=room,
         customer = customer,
@@ -243,4 +246,4 @@ def addBron(request,pk):
         time_to=time_to,
         date=date
         )
-    return bron
+    return True

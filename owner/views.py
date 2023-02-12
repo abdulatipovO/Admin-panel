@@ -3,13 +3,15 @@ from django.views import View
 from .tools import *
 from main.models import *
 from .decorators import deco_login
-
+import datetime
+        
 
 
 # Create your views here.
 
 
 class HomeView(View):
+    @deco_login
     def get(self, request):
         category = Category.objects.all()
         weekday = WeekDay.objects.all()
@@ -17,6 +19,8 @@ class HomeView(View):
             'category':category,
             'weekday' :weekday,
         }
+        # WeekDay.objects.create(day_name='haftada 7 kun',day_number=7)
+        # Category.objects.create(name='samavor')
         try:
             service = Service.objects.filter(owner=request.user)
             context['service'] = service
@@ -68,7 +72,6 @@ class IntroView(View):
 
 
 class ServiceView(View):
-
     def post(self,request):
         service =  service_register(request)
         if service == True:
@@ -76,7 +79,7 @@ class ServiceView(View):
         return redirect('/')
 
 class ServiceDetailView(View):
-
+    @deco_login
     def get(self, request,pk):
         category = Category.objects.all()
         weekday = WeekDay.objects.all()
@@ -89,7 +92,6 @@ class ServiceDetailView(View):
             'rooms':rooms,
         }
         return render(request,'detail_service.html', context)
-        
     def post(self, request,pk):
         service =  service_update(request,pk)
         if service == True:
@@ -98,7 +100,6 @@ class ServiceDetailView(View):
 
 
 class RoomView(View):
-
     def post(self,request ,pk):
         room  = room_create(request ,pk)
         if room == True:
@@ -129,22 +130,22 @@ class RoomUpdateView(View):
         return redirect(f"/room/update/{pk}")
 
 class BronView(View):
+    @deco_login
     def get(self,request,pk ):
+        today = datetime.date.today()
         rooms = Room.objects.filter(service=pk)
         print(rooms)
         l = []
         for r in rooms:
-            bron = Bron.objects.filter(room=r.id).filter(date='2023-02-09')
+            bron = Bron.objects.filter(room=r.id).filter(date__gte=today)
             l.append(bron)
-            
+
         context  = {
             "brons":l
         }
-        
-        
+
         return render(request, 'bron_list.html', context)
-    
-    
+
 class BronAddView(View):
     def get(self, request,pk):
         room =  Room.objects.filter(service=pk)
@@ -153,12 +154,12 @@ class BronAddView(View):
             "pk":pk
         }
         return render(request, 'add_bron.html', context)
-    
+
     def post(self, request,pk):
-        
+
         bron = addBron(request,pk)
-        if bron:
+        if bron == True:
             print("create")
             return redirect('/')
-        print('not create')
+        print(bron, 'bu listda shu kungi barcha bronlar bor ')  # message yoki biror sahifaga jonatib belgi berish kerak 
         return redirect('/')
