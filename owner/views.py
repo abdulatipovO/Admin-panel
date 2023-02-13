@@ -3,11 +3,12 @@ from django.views import View
 from .tools import *
 from main.models import *
 from .decorators import deco_login
-
+import datetime
 
 
 # Create your views here.
 
+today = datetime.datetime.now()
 
 class HomeView(View):
     def get(self, request):
@@ -82,11 +83,17 @@ class ServiceDetailView(View):
         weekday = WeekDay.objects.all()
         service = Service.objects.get(id=pk)
         rooms = Room.objects.filter(service=service)
+        l = []
+        for r in rooms:
+            bron = Bron.objects.filter(room=r.id).filter(date__gte=today.strftime('%Y-%m-%d'))
+            l.append(bron)
+        print(l)
         context = {
             'category':category,
             'weekday':weekday,
             'service':service,
             'rooms':rooms,
+            'brons':l
         }
         return render(request,'detail_service.html', context)
         
@@ -116,9 +123,7 @@ class RoomUpdateView(View):
                    }
         return render(request,'room_parametr.html',context)
     def post(self,request,pk):
-        print(pk)
-        print(pk)
-        print(pk)
+      
         update = room_update(request,pk)
         if update:
             return redirect(f"/room/update/{pk}")

@@ -21,7 +21,29 @@
 
 <div class="main-panel">
     <div class="content-wrapper">
-        <a href="#" onclick="addBiznes('open_room')" class="btn btn-rounded bg-gradient-success text-white mb-3" style="width: 20%; ">Xona qo'shish <i class="mdi mdi-plus-circle-outline"></i></a>
+
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="staticBackdropLabel">Bekor qilish</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        karochi forma bo'ladi bu yerda
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <a href="#" onclick="addBiznes('open_room')" class="btn btn-rounded bg-gradient-success text-white mb-3" style="width: 20%; ">Xona qo'shish <i class="mdi mdi-plus-circle-outline"></i></a>
     <div class="row">
         <div class="col-md-8 card-scroll" style="overflow-y: scroll; max-height:590px;">
             
@@ -55,6 +77,54 @@
                     </div>
                   </div>
                 </div>
+                <div class="accordion accordion-flush " id="accordionFlushExample-{{ r.id }}">
+                  <div class="accordion-item">
+                    <h2 class="accordion-header" id="flush-headingOne">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne-{{ r.id }}" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Band qilingan sana va vaqtlar ro'yxati
+                      </button>
+                    </h2>
+                    <div id="flush-collapseOne-{{ r.id }}" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample-{{ r.id }}">
+                      <div class="accordion-body">
+
+                         <div class="row">
+                                <div class="col-md-4" style="margin: 0 auto; float:none;">
+                                    <input type="date" onchange="filterRows2('{{ r.id }}')"  class="form-control cal-date" id="datefilter-{{ r.id }}" data-id="{{ r.id }}" data-date-split-input="true">
+                                </div>
+                                
+                          </div>
+                        <table id="testTable" class="table table-hover table-border mt-3" border="1">
+                            <thead>
+                              <tr>
+                                <th>№</th>
+                                <th>Band qiluvchi ismi</th>
+                                <th>Telefon raqami</th>
+                                <th>Sana</th>
+                                <th>Band qilingan vaqt</th>
+                                <th>Bekor qilish</th>
+                              </tr>
+                            </thead>
+                          <tbody>
+                            {% for b in r.room_brons.all %}
+                            <tr class="tr-{{ r.id }}">
+                              <td>{{ forloop.counter }}</td>
+                              <td>{{ b.name }}</td>
+                              <td>{{ b.phone }}</td>
+                              <td>{{ b.date | date:"d/m/Y" }}</td>
+                              <td> <span>00:00 - 05:00 </span> </td>
+                              <td class="text-danger"><a href="#" type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="mdi mdi-delete" style="font-size: 18px; color:red;"></i></a></td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        
+                        </table>
+                     
+                      </div>
+                    </div>
+                  </div>
+                 
+                </div>
+
               </div>
               {% endfor %}
 
@@ -293,6 +363,82 @@
 
   </div>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+
+<script>
+                          
+
+
+  function filterRows2(id) {
+    var from = document.getElementById(`datefilter-${id}`).value;
+    let tr_id = document.querySelectorAll(`.tr-${id}`);
+    
+    if (!from) { // no value for from and to
+        return;
+      }
+    
+      from = from || '1970-01-01'; // default from to a old date if it is not set
+    
+      var dateFrom = moment(from);
+      //
+      tr_id.forEach(element => {
+          var val = $(element).find("td:nth-child(4)").text();
+          var dateVal = moment(val, "DD/MM/YYYY");
+          var visible = (dateVal.isSame(dateFrom));
+        
+          if (visible === false){
+            $(element).css('display', 'none');
+            
+          }else{
+            $(element).css('display', '');
+  
+          }
+      });
+     
+
+    }
+
+      
+
+    window.onload = function filterRows() {
+      let date = document.querySelectorAll('.cal-date');
+      var today = new Date();
+      
+      
+      let from = 0
+      date.forEach(element => {
+        let id = element.getAttribute('data-id');
+        from = element.value = today.getFullYear() + '-' + ('0' + (today.getMonth() + 1)).slice(-2) + '-' + ('0' + today.getDate()).slice(-2);
+      });
+     
+      if (!from) { // no value for from and to
+        return;
+      }
+    
+      from = from || '1970-01-01'; // default from to a old date if it is not set
+    
+      var dateFrom = moment(from);
+    
+      $('#testTable tbody tr').each(function(i, tr) {
+        var val = $(tr).find("td:nth-child(4)").text();
+        var dateVal = moment(val, "DD/MM/YYYY");
+        var visible = (dateVal.isSame(dateFrom));
+      
+        if (visible === false){
+          $(tr).css('display', 'none');
+          
+        }else{
+          $(tr).css('display', '');
+
+        }
+      });
+    }
+    
+  // $('#datefilter').on("change", filterRows2);
+
+  </script>
     <script>
         let formRegister = document.querySelector('.form-register');
         let roomAdd = document.querySelector('.room_add');
@@ -310,6 +456,7 @@
           }
         }
       </script>
+
     <style>
         .card-scroll::-webkit-scrollbar{
             display: none;
