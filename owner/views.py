@@ -156,7 +156,6 @@ class BronAddView(View):
         return render(request, 'add_bron.html', context)
 
     def post(self, request,pk):
-
         bron = addBron(request,pk)
         if bron == True:
             print("create")

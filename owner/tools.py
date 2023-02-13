@@ -236,7 +236,9 @@ def addBron(request,pk):
     bron = Bron.objects.filter(
                                Q(room=room,date=date, time_from__range=(time_from[:4]+'1',time_to) )
                                |Q(room=room,date=date, time_to__range=(time_from[:4]+'1',time_to) )
-                              )
+                               |Q(room=room,date=date, time_from__lte = time_from ,time_to__gte = time_to )
+
+                              ).exists()
 
     if bron:
         bron = Bron.objects.filter(room=room,date=date)
