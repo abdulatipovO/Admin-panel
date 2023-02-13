@@ -230,11 +230,8 @@ def addBron(request,pk):
 
     time_to = request.POST['bron_time_to']
     date = request.POST['date']
-
-
-
     bron = Bron.objects.filter(
-                               Q(room=room,date=date, time_from__range=(time_from[:4]+'1',time_to) )
+                                Q(room=room,date=date, time_from__range=(time_from[:4]+'1',time_to) )
                                |Q(room=room,date=date, time_to__range=(time_from[:4]+'1',time_to) )
                                |Q(room=room,date=date, time_from__lte = time_from ,time_to__gte = time_to )
 

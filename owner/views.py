@@ -160,5 +160,7 @@ class BronAddView(View):
         if bron == True:
             print("create")
             return redirect('/')
-        print(bron, 'bu listda shu kungi barcha bronlar bor ')  # message yoki biror sahifaga jonatib belgi berish kerak 
+        print(bron, 'bu listda shu kungi barcha bronlar bor ')  # message yoki biror sahifaga jonatib belgi berish kerak
+        for i in bron:
+            print(i.room.name, i.date,'kuni' , i.time_from, 'dan' ,  i.time_to , 'gacha band')
         return redirect('/')
