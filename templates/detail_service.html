@@ -23,24 +23,6 @@
     <div class="content-wrapper">
 
 
-<!-- Modal -->
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title text-center" id="staticBackdropLabel">Bekor qilish</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        karochi forma bo'ladi bu yerda
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-        <button type="button" class="btn btn-primary">Yes</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
     <a href="#" onclick="addBiznes('open_room')" class="btn btn-rounded bg-gradient-success text-white mb-3" style="width: 20%; ">Xona qo'shish <i class="mdi mdi-plus-circle-outline"></i></a>
@@ -48,6 +30,8 @@
         <div class="col-md-8 card-scroll" style="overflow-y: scroll; max-height:590px;">
             
             {% for r in rooms %}
+                              
+
             <div class="card mb-3" >
                 <div class="row g-0">
                   <div class="col-md-4 p-1">
@@ -70,12 +54,20 @@
                       <h5 class="card-title">{{ r.name }}</h5>
                       <h6>Reyting: <i class="mdi mdi-star text-warning"></i><i class="mdi mdi-star text-warning"></i><i class="mdi mdi-star text-warning"></i><i class="mdi mdi-star text-warning"></i></h6>
                       <h6>Xona egasi: {{ r.owner }}</h6>
-                      <a href="#"><span class="badge bg-gradient-info">Bron qilish</span></a>
-                      <p class="card-text">
-                        <small class="text-danger">18:00 dan 21:00 gacha band</small>
-                      </p>
+                      <a href="{% url  'owner:room_update' r.id  %}"><span class="badge bg-gradient-info">Bron qilish</span></a>
+                      
+                      {% for i in brons %}
+                        {% for b in i %}
+                        <p class="card-text mt-3">
+                          <small class="text-danger">{{ b.name}}</small>
+                        </p>
+                      {% endfor %}
+                      {% endfor %}
+
                     </div>
                   </div>
+
+
                 </div>
                 <div class="accordion accordion-flush " id="accordionFlushExample-{{ r.id }}">
                   <div class="accordion-item">
@@ -93,7 +85,7 @@
                                 </div>
                                 
                           </div>
-                        <table id="testTable" class="table table-hover table-border mt-3" border="1">
+                        <table id="testTable" class="table table-hover table-border mt-3 " border="1">
                             <thead>
                               <tr>
                                 <th>№</th>
@@ -106,14 +98,54 @@
                             </thead>
                           <tbody>
                             {% for b in r.room_brons.all %}
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title text-center" id="staticBackdropLabel">Bekor qilish</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <form action="" method="post" >
+                                      {% csrf_token %}
+                                      <div class="form-group row">
+                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Xona nomi</label>
+                                        <div class="col-sm-9">
+                                          <input type="text" class="form-control" name="name" id="exampleInputUsername2" placeholder="Xona nomi (1-xona) id={{ r.id }}">
+                                        </div>
+                                      </div>
+                                      <div class="form-group row">
+                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Xona nomi</label>
+                                        <div class="col-sm-9">
+                                          <input type="date"   class="form-control cal-date" id="" data-id="" data-date-split-input="true">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Orqaga</button>
+                                      <button  type="submit" class="btn btn-primary">Tasdiqlash</button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+
+
+
+
+                            {% if b.status == 'cancelled' %}
+                            
+                            {% else %}
                             <tr class="tr-{{ r.id }}">
                               <td>{{ forloop.counter }}</td>
                               <td>{{ b.name }}</td>
                               <td>{{ b.phone }}</td>
                               <td>{{ b.date | date:"d/m/Y" }}</td>
-                              <td> <span>00:00 - 05:00 </span> </td>
-                              <td class="text-danger"><a href="#" type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="mdi mdi-delete" style="font-size: 18px; color:red;"></i></a></td>
+                              <td> <span>{{ b.time_from  |date:"H:i" }} - {{b.time_to |date:"H:i " }} </span> </td>
+                              <td class="text-danger"><a href="#"  type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="mdi mdi-delete" style="font-size: 18px; color:red;"></i></a></td>
                             </tr>
+                            {% endif %}
                             {% endfor %}
                           </tbody>
                         
@@ -368,6 +400,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 
 <script>
+
+
+  //function calcelBron(pk){
+  //  console.log(pk)
+//}
                           
 
 

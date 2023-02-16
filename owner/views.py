@@ -85,7 +85,7 @@ class ServiceDetailView(View):
         rooms = Room.objects.filter(service=service)
         l = []
         for r in rooms:
-            bron = Bron.objects.filter(room=r.id).filter(date__gte=today.strftime('%Y-%m-%d'))
+            bron = Bron.objects.filter(room=r.id).filter(date=today.strftime('%Y-%m-%d'))
             l.append(bron)
         print(l)
         context = {
@@ -146,7 +146,6 @@ class BronView(View):
             "brons":l
         }
         
-        
         return render(request, 'bron_list.html', context)
     
     
@@ -160,10 +159,24 @@ class BronAddView(View):
         return render(request, 'add_bron.html', context)
     
     def post(self, request,pk):
-        
+        room_id = request.POST['room']
         bron = addBron(request,pk)
-        if bron:
-            print("create")
-            return redirect('/')
-        print('not create')
-        return redirect('/')
+        if bron == True:
+            messages.success(request, "Xona muvaffaqiyatli band qilindi !")
+        else:
+            for i in bron:
+                messages.success(request, f"{i.room.name} {i.date} kuni {str(i.time_from)[:5]} dan {str(i.time_to)[:5]} gacha band ")
+        room =  Room.objects.filter(service=pk)
+        context = {
+            "rooms":room,
+            "pk":pk
+        }
+
+        return render(request, 'add_bron.html', context)
+    
+class BronCancelView(View):
+    
+    def post(self, request,pk):
+        bron = Bron.objects.filter(id=24)
+        bron
+        return render(request, 'index.html')

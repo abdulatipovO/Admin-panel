@@ -85,6 +85,7 @@ class Bron(models.Model):
     cancel_date = models.DateTimeField(blank=True, null=True)
     name = models.CharField("Kimni nomiga", max_length=50, null=True, blank=True)
     phone = models.CharField("Telefon raqami", max_length=13, null=True, blank=True)
+    
     reg_date = models.DateTimeField(auto_now_add=True)
 
 

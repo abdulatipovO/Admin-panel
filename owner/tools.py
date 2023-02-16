@@ -3,8 +3,8 @@ from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect
 from customer.utils import CreateVerificationCode
 from django.contrib import messages
-
-
+from django.db.models import Q
+import datetime
 
 def register_(request):
     username = request.POST['username']
@@ -233,13 +233,31 @@ def addBron(request,pk):
     time_to = request.POST['bron_time_to']
     date = request.POST['date']
 
+    bron = Bron.objects.filter(
+                        Q(room=room,date=date, time_from__range=(time_from[:4]+'1',time_to),status='waiting' )
+                        |Q(room=room,date=date, time_to__range=(time_from[:4]+'1',time_to), status='waiting' )
+                        |Q(room=room,date=date, time_from__lte = time_from ,time_to__gte = time_to, status='waiting' )
+
+                        ).exists()
+
+    if bron:
+        bron = Bron.objects.filter(room=room,date=date)
+        return bron
     bron = Bron.objects.create(
         room=room,
         customer = customer,
-        name=name,
-        phone=phone,
         time_from=time_from,
         time_to=time_to,
-        date=date
+        date=date,
+        name=name,
+        phone=phone,
         )    
-    return bron
+
+    return True
+
+def cancelBron(request,pk):
+    date = request.POST['date']
+    room = Bron.objects.filter(room=pk)
+    return True
+    
+    
