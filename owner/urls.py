@@ -19,6 +19,6 @@ urlpatterns = [
     path('room/update/<int:pk>',RoomUpdateView.as_view(),name = 'room_update'),
     path('brons/<int:pk>',BronView.as_view(),name = 'brons'),
     path('add/bron/<int:pk>',BronAddView.as_view(),name = 'add_bron'),
-    path('cancel/bron/<int:pk>',BronCancelView.as_view(),name = 'cancel_bron')
+    path('cancel/bron',BronCancelView.as_view(),name = 'cancel_bron')
 
 ]

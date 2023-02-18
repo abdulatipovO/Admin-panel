@@ -102,14 +102,20 @@
     <div class="col-md-6 ">
       <div class="card">
         <div class="card-body">
-          <div class="card-title">1-xonani Bron qilish</div>
-          <form action="" class="form mt-3 p-3">
-            <div class="form-group">
-              <label for="exampleFormControlSelect2"><h5>Bron qiluvchi</h5></label>
-              <select class="form-control" id="exampleFormControlSelect2">
-                <option>1</option>
-
-              </select>
+          <div class="card-text">{{ room.name }} ni band qilish</div>
+          <form action="{% url 'owner:add_bron' room.id %}" method="post" class="form mt-3 p-3">
+            {% csrf_token %}
+            <div class="form-group row">
+              <label for="exampleInputMobile" class="col-sm-3 col-form-label">Kimning nomiga</label>
+              <div class="col-sm-9">
+                <input type="text"  class="form-control" name="name" id="exampleInputMobile" placeholder="Ism">
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="exampleInputMobile" class="col-sm-3 col-form-label">Telefon raqam</label>
+              <div class="col-sm-9">
+                <input type="text"  class="form-control" name="phone" id="exampleInputMobile" placeholder="Telefon">
+              </div>
             </div>
             <div class="row">
               <div class="col-md-4">
@@ -122,30 +128,28 @@
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="timefrom"> <h5>00:00 dan  </h5></label>
-                  <input type="time" id="timefrom" class="form-control form-control-lg" name="working_time_from" required>
+                  <input type="time" id="timefrom" class="form-control form-control-lg" name="bron_time_from" required>
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
                   <label for="timeto"> <h5>00:00 gacha</h5></label>
-                  <input type="time" id="timeto" class="form-control form-control-lg" name="working_time_to"  required>
+                  <input type="time" id="timeto" class="form-control form-control-lg" name="bron_time_to"  required>
                 </div>
               </div>
-          </div>
-          <!-- <div class="form-group">
-            <label for="exampleFormControlSelect2"><h5>Bekor qiluvchi</h5></label>
-            <select class="form-control" id="exampleFormControlSelect2">
-              <option>Owner</option>
-              <option>Customer</option>
-            </select>
-          </div> -->
+              
+            </div>
+            <div class="text-left">
+              <button type="submit" class="btn btn-gradient-warning ">Bron qilish</button>
+            </div>
 
+
+          </form>
 
         </div>
 
             </div>
             
-          </form>
         </div>
         </div>
       </div>

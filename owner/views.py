@@ -4,6 +4,8 @@ from .tools import *
 from main.models import *
 from .decorators import deco_login
 import datetime
+from django.http import JsonResponse
+
 
 
 # Create your views here.
@@ -83,17 +85,13 @@ class ServiceDetailView(View):
         weekday = WeekDay.objects.all()
         service = Service.objects.get(id=pk)
         rooms = Room.objects.filter(service=service)
-        l = []
-        for r in rooms:
-            bron = Bron.objects.filter(room=r.id).filter(date=today.strftime('%Y-%m-%d'))
-            l.append(bron)
-        print(l)
+        
         context = {
             'category':category,
             'weekday':weekday,
             'service':service,
             'rooms':rooms,
-            'brons':l
+            "today":today.date
         }
         return render(request,'detail_service.html', context)
         
@@ -159,13 +157,12 @@ class BronAddView(View):
         return render(request, 'add_bron.html', context)
     
     def post(self, request,pk):
-        room_id = request.POST['room']
         bron = addBron(request,pk)
         if bron == True:
             messages.success(request, "Xona muvaffaqiyatli band qilindi !")
         else:
             for i in bron:
-                messages.success(request, f"{i.room.name} {i.date} kuni {str(i.time_from)[:5]} dan {str(i.time_to)[:5]} gacha band ")
+                messages.success(request, f"Ushbu xona {i.date} kuni {str(i.time_from)[:5]} dan {str(i.time_to)[:5]} gacha band ")
         room =  Room.objects.filter(service=pk)
         context = {
             "rooms":room,
@@ -175,8 +172,11 @@ class BronAddView(View):
         return render(request, 'add_bron.html', context)
     
 class BronCancelView(View):
+    def post(self, request):
+        service_id = int(request.POST['id_service'])
+        cancelBron(request)
+        return redirect(f'/service/{service_id}')
+
     
-    def post(self, request,pk):
-        bron = Bron.objects.filter(id=24)
-        bron
-        return render(request, 'index.html')
+    
+ 

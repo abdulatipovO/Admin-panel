@@ -221,11 +221,12 @@ def img_create(request,pk):
         return False
     
 def addBron(request,pk):
-    room_id = request.POST['room']
-    print(room_id)
-    print(room_id)
-    print(room_id)
-    room = Room.objects.filter(id=room_id)[0]
+    try:
+        room_id = request.POST['room']
+        room = Room.objects.filter(id=room_id)[0]
+    except:
+        room = Room.objects.filter(id=pk)[0]
+        
     customer = request.user
     name = request.POST['name']
     phone = request.POST['phone']
@@ -255,9 +256,15 @@ def addBron(request,pk):
 
     return True
 
-def cancelBron(request,pk):
-    date = request.POST['date']
-    room = Bron.objects.filter(room=pk)
-    return True
+def cancelBron(request):
+    now = datetime.datetime.today()
+    id_bron = request.POST['id_bron']
+    canceller = request.POST['canceller']
+    bron = Bron.objects.get(id=id_bron)
+    bron.canceller = canceller
+    bron.cancel_date = now
+    bron.status = 'cancelled'
+    bron.save()
+    return bron
     
     

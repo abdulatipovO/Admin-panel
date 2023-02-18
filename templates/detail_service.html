@@ -56,13 +56,20 @@
                       <h6>Xona egasi: {{ r.owner }}</h6>
                       <a href="{% url  'owner:room_update' r.id  %}"><span class="badge bg-gradient-info">Bron qilish</span></a>
                       
-                      {% for i in brons %}
-                        {% for b in i %}
-                        <p class="card-text mt-3">
-                          <small class="text-danger">{{ b.name}}</small>
+                      
+                      <p class="card-text mt-3 ">
+                          {% for b in r.room_brons.all %}
+
+                          {% if b.status == 'cancelled' %}
+                          {% else %}
+                          {% if b.date == today %}
+                          <small class="text-danger d-block"> {{ b.time_from | date:"H:i" }} dan  {{ b.time_to | date:"H:i" }} gacha band </small>
+                          {% else %}
+                          {% endif %}
+                          {% endif %}
+
+                        {% endfor %}
                         </p>
-                      {% endfor %}
-                      {% endfor %}
 
                     </div>
                   </div>
@@ -92,7 +99,7 @@
                                 <th>Band qiluvchi ismi</th>
                                 <th>Telefon raqami</th>
                                 <th>Sana</th>
-                                <th>Band qilingan vaqt</th>
+                                <th>Band qilingan vaqt</th> 
                                 <th>Bekor qilish</th>
                               </tr>
                             </thead>
@@ -107,20 +114,29 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body">
-                                    <form action="" method="post" >
+                                    <form action="{% url 'owner:cancel_bron' %}" method="post" >
                                       {% csrf_token %}
-                                      <div class="form-group row">
-                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Xona nomi</label>
+                                      <div class="form-group row d-none">
                                         <div class="col-sm-9">
-                                          <input type="text" class="form-control" name="name" id="exampleInputUsername2" placeholder="Xona nomi (1-xona) id={{ r.id }}">
+                                          <input type="text" class="form-control id_bron" name="id_bron" id="exampleInputUsername2" placeholder="Xona nomi (1-xona) id={{ r.id }}">
+                                        </div>
+                                      </div>
+                                      <div class="form-group row d-none">
+                                        <div class="col-sm-9">
+                                          <input type="text" class="form-control id_service" name="id_service" id="exampleInputUsername2" placeholder="Xona nomi (1-xona) id={{ r.id }}">
                                         </div>
                                       </div>
                                       <div class="form-group row">
-                                        <label for="exampleInputUsername2" class="col-sm-3 col-form-label">Xona nomi</label>
+                                          <label for="exampleFormControlSelect2" class="col-sm-3 ">Bekor qiluvchi</label>
                                         <div class="col-sm-9">
-                                          <input type="date"   class="form-control cal-date" id="" data-id="" data-date-split-input="true">
+                                          <select class="form-control" name="canceller"  id="exampleFormControlSelect2">
+                                            <option value="owner">Ega</option>
+                                            <option value="customer">Mijoz</option>
+                                          </select>
                                         </div>
                                       </div>
+                                  
+
                                     </div>
                                     <div class="modal-footer">
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Orqaga</button>
@@ -132,24 +148,30 @@
                             </div>
 
 
+                                {% if b.status == 'cancelled' %}
+                                
+                                {% else %}
+                                <tr class="tr-{{ r.id }}">
+                                  <td>{{ forloop.counter }}</td>
+                                  <td>{{ b.name }}</td>
+                                  <td>{{ b.phone }}</td>
+                                  <td>{{ b.date | date:"d/m/Y" }}</td>
+                                  <td><span>{{ b.time_from  |date:"H:i" }} - {{b.time_to |date:"H:i " }} </span> </td>
+                                  <td class="text-danger"><a href="#" onclick="cancelBron('{{ b.id }}')" class="id_service_tr" data-id="{{ service.id }}" type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop" ><i class="mdi mdi-delete" style="font-size: 18px; color:red;"></i></a></td>
+                                </tr>
+                                {% endif %}
 
-
-                            {% if b.status == 'cancelled' %}
+                                
+                           
+                                {% endfor %}
                             
-                            {% else %}
-                            <tr class="tr-{{ r.id }}">
-                              <td>{{ forloop.counter }}</td>
-                              <td>{{ b.name }}</td>
-                              <td>{{ b.phone }}</td>
-                              <td>{{ b.date | date:"d/m/Y" }}</td>
-                              <td> <span>{{ b.time_from  |date:"H:i" }} - {{b.time_to |date:"H:i " }} </span> </td>
-                              <td class="text-danger"><a href="#"  type="button"  data-bs-toggle="modal" data-bs-target="#staticBackdrop"><i class="mdi mdi-delete" style="font-size: 18px; color:red;"></i></a></td>
-                            </tr>
-                            {% endif %}
-                            {% endfor %}
                           </tbody>
                         
                         </table>
+                        <div class="text-center table-msg d-none">
+                          <small >Ushbu sanada bronlar mavjud emas !</small>
+                        </div>
+
                      
                       </div>
                     </div>
@@ -399,18 +421,21 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 
+
 <script>
 
+    function cancelBron(pk){
+      let id = document.querySelector('.id_bron').defaultValue = pk;
+      let service_tr = document.querySelector('.id_service_tr').getAttribute('data-id');
+      let service_id = document.querySelector('.id_service').defaultValue = service_tr;
+    }
 
-  //function calcelBron(pk){
-  //  console.log(pk)
-//}
-                          
 
 
   function filterRows2(id) {
     var from = document.getElementById(`datefilter-${id}`).value;
     let tr_id = document.querySelectorAll(`.tr-${id}`);
+    
     
     if (!from) { // no value for from and to
         return;
@@ -437,7 +462,6 @@
 
     }
 
-      
 
     window.onload = function filterRows() {
       let date = document.querySelectorAll('.cal-date');
@@ -465,15 +489,15 @@
       
         if (visible === false){
           $(tr).css('display', 'none');
+ 
           
         }else{
           $(tr).css('display', '');
-
+        
         }
       });
     }
     
-  // $('#datefilter').on("change", filterRows2);
 
   </script>
     <script>
