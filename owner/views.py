@@ -11,8 +11,8 @@ from django.http import JsonResponse
 # Create your views here.
 
 today = datetime.datetime.now()
-
 class HomeView(View):
+    @deco_login
     def get(self, request):
         category = Category.objects.all()
         weekday = WeekDay.objects.all()
@@ -134,17 +134,24 @@ class RoomUpdateView(View):
 class BronView(View):
     def get(self,request,pk ):
         rooms = Room.objects.filter(service=pk)
-        print(rooms)
-        l = []
+        events = []
         for r in rooms:
-            bron = Bron.objects.filter(room=r.id).filter(date='2023-02-09')
-            l.append(bron)
+            brons = Bron.objects.filter(room=r.id)
+            for bron in brons:
+                event = {
+					'id': r.id,
+					'title': f'{ bron.time_from } dan { bron.time_to } gacha',
+					'start': f"{bron.date}T{bron.time_from}",
+					'end': f"{bron.date}T{bron.time_to}",
+					'className': 'info'
+				}
+                events.append(event)
             
         context  = {
-            "brons":l
+            "events":events
         }
         
-        return render(request, 'bron_list.html', context)
+        return render(request, 'fullcalendar.html', context)
     
     
 class BronAddView(View):
@@ -162,7 +169,7 @@ class BronAddView(View):
             messages.success(request, "Xona muvaffaqiyatli band qilindi !")
         else:
             for i in bron:
-                messages.success(request, f"Ushbu xona {i.date} kuni {str(i.time_from)[:5]} dan {str(i.time_to)[:5]} gacha band ")
+                messages.error(request, f"Ushbu xona {i.date} kuni {str(i.time_from)[:5]} dan {str(i.time_to)[:5]} gacha band !")
         room =  Room.objects.filter(service=pk)
         context = {
             "rooms":room,
@@ -177,6 +184,16 @@ class BronCancelView(View):
         cancelBron(request)
         return redirect(f'/service/{service_id}')
 
+
+class OwnerProfilView(View):
+    @deco_login
+    def get(self, request):
+        user = User.objects.filter(username=request.user)[0]
+        return render(request, 'owner_profil.html',{"user":user})
+    
+    def post(self, request):
+        profilUpdate(request)
+        return redirect('/profil')
     
     
  

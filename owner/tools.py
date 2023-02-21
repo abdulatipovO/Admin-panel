@@ -268,3 +268,46 @@ def cancelBron(request):
     return bron
     
     
+def profilUpdate(request):
+    username = request.POST['username']
+    first_name = request.POST['first_name']
+    last_name = request.POST['last_name']
+    email = request.POST['email']
+    phone = request.POST['phone']
+    adres= request.POST['address']
+    password1= request.POST.get('password1', False)
+    password2= request.POST.get('password1', False)
+    
+    try:
+        profil = request.user
+        user = User.objects.get(username=profil)
+    except:
+        pass
+    
+    if password1 != False:
+        if len(password1) < 8:
+            print('parol 8 tadan kam bolmasligi kerak')
+            # "password must be less than 8 characters"
+            messages.error(request, "Parol 8 ta belgidan kam bo'lmasligi kerak !")
+            return False
+
+        if password1 != password2:
+            print('parollar bir xil emas')
+            # "Passwords is not equal"
+            messages.error(request, "Parollar bir xil emas !")
+            return False
+        
+        user.set_password(password1)
+        
+    user.username = username
+    user.first_name = first_name
+    user.last_name = last_name
+    user.phone = phone
+    user.adres = adres
+    user.email = email
+    user.save()
+
+    return True
+    
+
+    

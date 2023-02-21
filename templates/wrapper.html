@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/static/assets/vendors/css/vendor.bundle.base.css">
     <link rel="stylesheet" href="/static/assets/boostrap/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/assets/boostrap/bootstrap/css/bootstrap.css">
+    
 
     <link rel="stylesheet" href="/static/assets/css/style.css">
     <!-- End layout styles -->
@@ -157,17 +158,17 @@
         <nav class="sidebar sidebar-offcanvas " id="sidebar">
           <ul class="nav">
             <li class="nav-item nav-profile">
-              <a href="#" class="nav-link">
+              <a href="{% url 'owner:owner_profil' %}" class="nav-link">
                 <div class="nav-profile-image">
                   <img src="/static/assets/images/faces/face1.jpg" alt="profile">
                   <span class="login-status online"></span>
                   <!--change to offline or busy as needed-->
                 </div>
-                <div class="nav-profile-text d-flex flex-column">
-                  <span class="font-weight-bold mb-2">David Grey. H</span>
-                  <span class="text-secondary text-small">Project Manager</span>
+                <div  class="nav-profile-text d-flex flex-column">
+                  <span class="font-weight-bold mb-2">{{ request.user.first_name }} {{ request.user.last_name }} </span>
+                  <span class="text-secondary text-small">CEO <i class=" mdi mdi-check-circle text-primary nav-profile-badge"></i></span>
                 </div>
-                <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
+                
               </a>
             </li>
             <li class="nav-item">
@@ -185,7 +186,7 @@
             <li class="nav-item">
               <a class="nav-link" href="index.html">
                 <span class="menu-title">Umumiy reyting</span>
-                <i class="mdi mdi-home menu-icon"></i>
+                <i class="mdi mdi-chart-bar menu-icon"></i>
               </a>
             </li>
             
@@ -200,8 +201,57 @@
 
         {% block content %}
         {% endblock content %}
-<!-- 
-        <footer class="footer">
+        
+      
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            
+            {% if message.tags == 'success' %}
+            
+              <div class="text-center alert alert-success alert-dismissible fade show msg" role="alert" >
+                <i class="bi bi-check-circle me-1"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% elif message.tags == 'error' %}
+              <div class="text-center alert alert-danger alert-dismissible fade show msg" role="alert "   >
+                <i class="bi bi-x-circle me-1"></i>
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            
+            {% else %}
+            {% endif %}
+      
+            {% endfor %}
+        </ul>
+        {% else %}
+      {% endif %}
+
+      <style>
+        .msg{
+           position: fixed;
+           right: 0;
+           bottom: 50px;
+           width: 25%;
+           animation: run 1s linear ;
+           z-index: 100;
+          
+         }
+         @keyframes run {
+         from{ 
+             transform: translateX(500px);   
+         }
+         to{
+             transform: translateX(-8px);   
+         }
+   }
+       
+     </style>
+      
+
+         <!-- <footer class="footer">
             <div class="container-fluid d-flex justify-content-center">
               <span class="text-muted d-block text-center text-sm-start d-sm-inline-block">Copyright © Future coders 2023</span>
             </div>
