@@ -132,26 +132,60 @@ class RoomUpdateView(View):
         return redirect(f"/room/update/{pk}")
 
 class BronView(View):
-    def get(self,request,pk ):
-        rooms = Room.objects.filter(service=pk)
-        events = []
-        for r in rooms:
-            brons = Bron.objects.filter(room=r.id)
-            for bron in brons:
-                event = {
-					'id': r.id,
-					'title': f'{ bron.time_from } dan { bron.time_to } gacha',
-					'start': f"{bron.date}T{bron.time_from}",
-					'end': f"{bron.date}T{bron.time_to}",
-					'className': 'info'
-				}
-                events.append(event)
-            
-        context  = {
-            "events":events
-        }
+    def get(self,request, pk):
+        service = Service.objects.get(pk=pk)
+        return render(request, 'fullcalendar.html', {"service":service})
+    
+def calendar_view(request, pk):
+    rooms = Room.objects.filter(service=pk)
+    events = []
+    for r in rooms:
+        brons = Bron.objects.filter(room=r.id)
+        for bron in brons:
+            f = bron.time_from.strftime("%H:%M")
+            e = bron.time_to.strftime("%H:%M")
+            event = {
+                'id': r.id,
+                'title': f'{ f } dan { e } gacha',
+                'start': f"{bron.date}T{bron.time_from}",
+                'end': f"{bron.date}T{bron.time_to}",
+                'className': 'success',
+                'allDay': False,
+            }
+            events.append(event)
         
-        return render(request, 'fullcalendar.html', context)
+    data  = {
+        "data":events
+    }
+    return JsonResponse(data)
+
+
+def infoBrons(request):
+    pk = request.GET['pk']
+    day = request.GET['day']
+    month = request.GET['month']
+    year = request.GET['year']
+    print(month)
+    print(month)
+    print(month)
+    date = datetime.date(int(year),int(month),int(day))
+    print(date)
+    
+    service = Service.objects.get(id=pk)
+    rooms = Room.objects.filter(service=service)
+    bron = Bron.objects.filter(date=date)
+    d = {}
+    for r in rooms:
+        bron = Bron.objects.filter(date=date)
+       
+        for b in bron:
+            
+            d[f'{r.id}'] = {
+                "title":f"{b.time_from} dan {b.time_to} gacha"
+            }
+    print(bron)
+    
+    return JsonResponse({"status":"ok", "brons":d })
     
     
 class BronAddView(View):

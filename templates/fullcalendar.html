@@ -11,7 +11,8 @@
 		}
 	</style>
 
-	<div class="event" data-event="{{events}}"></div>
+	<div class="service_id" data-pk="{{ service.id }}"></div>
+
 
 <link href='/static/calendar/assets/css/fullcalendar.css' rel='stylesheet' />
 <link href='/static/calendar/assets/css/fullcalendar.print.css' rel='stylesheet' media='print' />
@@ -19,6 +20,8 @@
 <script src='/static/calendar/assets/js/jquery-ui.custom.min.js' type="text/javascript"></script>
 <script src='/static/calendar/assets/js/fullcalendar.js' type="text/javascript"></script>
 <script>
+	let d =  document.querySelectorAll('.fc-day-content');
+	console.log(d)
 
 	$(document).ready(function() {
 	    var date = new Date();
@@ -35,8 +38,6 @@
 
 		/* initialize the external events
 		-----------------------------------------------------------------*/
-
-		
 
 		$('#external-events div.external-event').each(function() {
 
@@ -61,76 +62,89 @@
 
 		/* initialize the calendar
 		-----------------------------------------------------------------*/
-		let events_ = $('.event').data('event')
-		console.log(events_)
-		var calendar =  $('#calendar').fullCalendar({
-			header: {
-				left: 'title',
-				center: 'agendaDay,agendaWeek,month',
-				right: 'prev,next today'
-			},
-			editable: true,
-			firstDay: 1, //  1(Monday) this can be changed to 0(Sunday) for the USA system
-			selectable: true,
-			defaultView: 'month',
+		let pk = $('.service_id').data('pk')
+		$.ajax({
+			url:`/calendar/${pk}`,
+			type:'get',
+			success: function(response){
+				
+				console.log(response['data'][0])
+				$('.service_id').html(response['data'])
 
-			axisFormat: 'h:mm',
-			columnFormat: {
-                month: 'ddd',    // Mon
-                week: 'ddd d', // Mon 7
-                day: 'dddd M/d',  // Monday 9/7
-                agendaDay: 'dddd d'
-            },
-            titleFormat: {
-                month: 'MMMM yyyy', // September 2009
-                week: "MMMM yyyy", // September 2009
-                day: 'MMMM yyyy'                  // Tuesday, Sep 8, 2009
-            },
-			allDaySlot: false,
-			selectHelper: true,
-			select: function(start, end, allDay) {
-				var title = prompt('Event Title:');
-				if (title) {
-					calendar.fullCalendar('renderEvent',
-						{
-							title: title,
-							start: start,
-							end: end,
-							allDay: allDay
-						},
-						true // make the event "stick"
-					);
-				}
-				calendar.fullCalendar('unselect');
-			},
-			droppable: true, // this allows things to be dropped onto the calendar !!!
-			drop: function(date, allDay) { // this function is called when something is dropped
+				var calendar =  $('#calendar').fullCalendar({
+					header: {
+						left: 'title',
+						center: 'agendaDay,agendaWeek,month',
+						right: 'prev,next today'
+					},
+					editable: false,
+					firstDay: 1, //  1(Monday) this can be changed to 0(Sunday) for the USA system
+					selectable: true,
+					defaultView: 'month',
+		
+					axisFormat: 'h:mm',
+					columnFormat: {
+						month: 'ddd',    // Mon
+						week: 'ddd d', // Mon 7
+						day: 'dddd M/d',  // Monday 9/7
+						agendaDay: 'dddd d'
+					},
+					titleFormat: {
+						month: 'MMMM yyyy', // September 2009
+						week: "MMMM yyyy", // September 2009
+						day: 'MMMM yyyy'                  // Tuesday, Sep 8, 2009
+					},
+					allDaySlot: false,
+					selectHelper: true,
+					select: function(start, end, allDay) {
+						console.log()
+						month = start.getMonth() + 1
+						$.ajax({
+							url:'/infoBrons',
+							type:'get',
+							data:{"pk":pk, "day":start.getDate(),"month":month,"year":start.getFullYear()},
+							success: function(response){
+								console.log(response)
+							}
+						})
 
-				// retrieve the dropped element's stored Event Object
-				var originalEventObject = $(this).data('eventObject');
 
-				// we need to copy it, so that multiple events don't have a reference to the same object
-				var copiedEventObject = $.extend({}, originalEventObject);
+						calendar.fullCalendar('unselect');
+					},
+					droppable: true, // this allows things to be dropped onto the calendar !!!
+					drop: function(date, allDay) { // this function is called when something is dropped
+		
+						// retrieve the dropped element's stored Event Object
+						var originalEventObject = $(this).data('eventObject');
+		
+						// we need to copy it, so that multiple events don't have a reference to the same object
+						var copiedEventObject = $.extend({}, originalEventObject);
+		
+						// assign it the date that was reported
+						copiedEventObject.start = date;
+						copiedEventObject.allDay = allDay;
+		
+						// render the event on the calendar
+						// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+						$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+		
+						// is the "remove after drop" checkbox checked?
+						if ($('#drop-remove').is(':checked')) {
+							// if so, remove the element from the "Draggable Events" list
+							$(this).remove();
+						}
+		
+					},
+		
+					events: response['data'],
+				});
 
-				// assign it the date that was reported
-				copiedEventObject.start = date;
-				copiedEventObject.allDay = allDay;
 
-				// render the event on the calendar
-				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
 
-				// is the "remove after drop" checkbox checked?
+			}
+		})
 
-				if ($('#drop-remove').is(':checked')) {
-					// if so, remove the element from the "Draggable Events" list
-					$(this).remove();
-				}
 
-			},
-
-			events: events_,
-		});
 
 
 	});
