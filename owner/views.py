@@ -172,18 +172,15 @@ def infoBrons(request):
     print(date)
     
     service = Service.objects.get(id=pk)
-    rooms = Room.objects.filter(service=service)
-    bron = Bron.objects.filter(date=date)
+    
+    bron = Bron.objects.filter(room__service=pk, date=date)
+    
     d = {}
-    for r in rooms:
-        bron = Bron.objects.filter(date=date)
-       
-        for b in bron:
-            
-            d[f'{r.id}'] = {
-                "title":f"{b.time_from} dan {b.time_to} gacha"
-            }
-    print(bron)
+    for b in bron:
+        
+        d[b.id] = {
+            "title":f"{b.time_from} dan {b.time_to} gacha"
+        }
     
     return JsonResponse({"status":"ok", "brons":d })
     
