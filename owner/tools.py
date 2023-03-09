@@ -220,12 +220,14 @@ def img_create(request,pk):
     except:
         return False
     
-def addBron(request,pk):
+def addBron(request):
+    
     try:
         room_id = request.POST['room']
         room = Room.objects.filter(id=room_id)[0]
     except:
-        room = Room.objects.filter(id=pk)[0]
+        room_id = request.POST['room_']
+        room = Room.objects.filter(id=room_id)[0]
         
     customer = request.user
     name = request.POST['name']
@@ -254,7 +256,7 @@ def addBron(request,pk):
         phone=phone,
         )    
 
-    return True
+    return [True,room]
 
 def cancelBron(request):
     now = datetime.datetime.today()
@@ -309,5 +311,85 @@ def profilUpdate(request):
 
     return True
     
-
     
+def infoBrons(request):
+    pk = request.GET['pk']
+    day = request.GET['day']
+    month = request.GET['month']
+    year = request.GET['year']
+    date = datetime.date(int(year),int(month),int(day))
+    bron = Bron.objects.filter(room__service=pk, date=date)
+    return bron
+
+def updateBrons(request,pk):
+    room_id = request.POST['room']
+    name = request.POST['name']
+    phone = request.POST['phone']
+    time_from = request.POST['bron_time_from']
+    time_to = request.POST['bron_time_to']
+    date = request.POST['date']
+    
+    if int(time_from[:2]) >= int(time_to[:2]):
+        return False
+
+    room = Room.objects.filter(id=room_id)[0]
+    
+    update_bron = Bron.objects.get(id=pk)   
+
+
+    bron = Bron.objects.filter(
+                        Q(room=room,date=date, time_from__range=(time_from[:4]+'1',time_to),status='waiting' )
+                        |Q(room=room,date=date, time_to__range=(time_from[:4]+'1',time_to), status='waiting' )
+                        |Q(room=room,date=date, time_from__lte = time_from ,time_to__gte = time_to, status='waiting' )
+
+                        ).exists()
+
+    if bron:
+        bron = Bron.objects.filter(room=room,date=date)
+        return bron
+    else:
+        update_bron.room = room
+        update_bron.name = name
+        update_bron.phone = phone
+        update_bron.time_from = time_from
+        update_bron.time_to = time_to
+        update_bron.date = date
+        update_bron.save()
+        
+ 
+
+    return True
+
+def uzbekWeekdays(date_):
+    day = date_.strftime("%a")
+    month = date_.strftime("%b")
+    week_days = {
+        "Mon":"Dushanba",
+        "Tue":"Seshanba",
+        "Wed":"Chorshanba",
+        "Thu":"Payshanba",
+        "Fri":"Juma",
+        "Sat":"Shanba",
+        "Sun":"Yakshaba"
+    }
+    
+    months = {
+        "Jan":"Yanvar",
+        "Feb":"Fevral",
+        "Mar":"Mart",
+        "Apr":"Aprel",
+        "May":"May",
+        "Jun":"Iyun",
+        "Jul":"Iyul",
+        "Aug":"Avgust",
+        "Sep":"Sentabr",
+        "Oct":"Oktabr",
+        "Dec":"Dekabr"
+    }
+
+    c = {
+        day:week_days[day],
+        month:months[month]
+    }
+    
+    return c

@@ -142,17 +142,18 @@ def calendar_view(request, pk):
     for r in rooms:
         brons = Bron.objects.filter(room=r.id)
         for bron in brons:
-            f = bron.time_from.strftime("%H:%M")
-            e = bron.time_to.strftime("%H:%M")
-            event = {
-                'id': r.id,
-                'title': f'{ f } dan { e } gacha',
-                'start': f"{bron.date}T{bron.time_from}",
-                'end': f"{bron.date}T{bron.time_to}",
-                'className': 'success',
-                'allDay': False,
-            }
-            events.append(event)
+            if bron.status != 'cancelled':
+                f = bron.time_from.strftime("%H:%M")
+                e = bron.time_to.strftime("%H:%M")
+                event = {
+                    'id': r.id,
+                    'title': f'{bron.room.name} { f }-{ e }',
+                    'start': f"{bron.date}T{bron.time_from}",
+                    'end': f"{bron.date}T{bron.time_to}",
+                    'className': 'success',
+                    'allDay': False,
+                }
+                events.append(event)
         
     data  = {
         "data":events
@@ -160,60 +161,41 @@ def calendar_view(request, pk):
     return JsonResponse(data)
 
 
-def infoBrons(request):
-    pk = request.GET['pk']
-    day = request.GET['day']
-    month = request.GET['month']
-    year = request.GET['year']
-    print(month)
-    print(month)
-    print(month)
-    date = datetime.date(int(year),int(month),int(day))
-    print(date)
-    
-    service = Service.objects.get(id=pk)
-    
-    bron = Bron.objects.filter(room__service=pk, date=date)
-    
-    d = {}
-    for b in bron:
-        
-        d[b.id] = {
-            "title":f"{b.time_from} dan {b.time_to} gacha"
-        }
-    
-    return JsonResponse({"status":"ok", "brons":d })
+
+
     
     
 class BronAddView(View):
-    def get(self, request,pk):
-        room =  Room.objects.filter(service=pk)
+    def get(self, request):
+        services= Service.objects.filter(owner=request.user)
+        # room =  Room.objects.filter(service=pk)
+        # context = {
+        #     "rooms":room,
+        #     "pk":pk
+        # }
         context = {
-            "rooms":room,
-            "pk":pk
+            "services":services
         }
         return render(request, 'add_bron.html', context)
     
-    def post(self, request,pk):
-        bron = addBron(request,pk)
-        if bron == True:
+    def post(self, request):
+        
+        bron = addBron(request)
+        if bron[0] == True:
             messages.success(request, "Xona muvaffaqiyatli band qilindi !")
         else:
             for i in bron:
                 messages.error(request, f"Ushbu xona {i.date} kuni {str(i.time_from)[:5]} dan {str(i.time_to)[:5]} gacha band !")
-        room =  Room.objects.filter(service=pk)
+        # room =  Room.objects.filter(service=pk)
+        services = Service.objects.filter(owner=request.user)
+
         context = {
-            "rooms":room,
-            "pk":pk
+            "services":services,
+            
         }
 
-        return render(request, 'add_bron.html', context)
+        return redirect(f'/brons/{bron[1].service.id}')
     
-class BronCancelView(View):
-    def post(self, request):
-        service_id = int(request.POST['id_service'])
-        cancelBron(request)
-        return redirect(f'/service/{service_id}')
 
 
 class OwnerProfilView(View):
@@ -226,5 +208,78 @@ class OwnerProfilView(View):
         profilUpdate(request)
         return redirect('/profil')
     
+class BronCancelView(View):
+    def post(self, request):
+        service_id = int(request.POST['id_service'])
+        cancelBron(request)
+        return redirect(f'/service/{service_id}')
     
+    
+class InfoBrons(View):
+    def get(self, request):
+        pk = request.GET['pk']
+        day = request.GET['day']
+        month = request.GET['month']
+        year = request.GET['year']
+        brons = infoBrons(request)
+        
+        rooms = Room.objects.filter(service=pk)
+        
+        date_ = datetime.date(int(year),int(month),int(day))
+        day = date_.strftime("%a")
+        month = date_.strftime("%b")
+         
+        uz = uzbekWeekdays(date_)
+    
+        d = request.session['date'] = f"pk={pk}&day={day}&month={month}&year={year}"
+      
+        return render(request, "detail_calendar.html",{"brons":brons, "rooms":rooms,"service_pk":pk, "date":date_, "day":uz[day], "month":uz[month]})
+    
+    def post(self,request):
+        d = request.session['date']
+        cancelBron(request)
+        messages.success(request, "Bron bekor qilindi !")
+
+        return redirect(f"/infoBrons?{d}")
+    
+    
+    
+class CalendarUpdateBron(View):
+    def post(self, request,pk):
+        d = request.session['date']
+        
+        update_bron = updateBrons(request,pk)
+        if update_bron == True:
+            messages.success(request, "Muvaffaqiyatli o'zgartirildi !")
+        elif update_bron == False:
+            messages.error(request, "Vaqtni belgilashda xatolik !")
+        else:
+            messages.error(request, "Band qilingan! Boshqa vaqtni tanlang")
+            
+        
+        return redirect(f"/infoBrons?{d}")
+        
+def get_room(request):
+    service = request.GET['service']
+    all_rooms = []
+    rooms = Room.objects.filter(service=service)
+    
+    for r in rooms:
+        rooms_ = {
+                'id': r.id,
+                "name":r.name
+                }
+        all_rooms.append(rooms_)
+        
+    
+    return JsonResponse({"status":"ok","all_rooms":all_rooms})
+         
+         
+
+def handler_404(request,exception):
+    return render(request, "404.html")
+
+def handler_500(request):
+    return render(request, "500.html")
+
  

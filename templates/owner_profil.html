@@ -36,16 +36,18 @@
                       <label for="exampleInputUsername1">Email</label>
                       <input type="email" value="{{ user.email }}" class="form-control form-control-lg" id="exampleInputEmail" name="email" placeholder="Example@gmail.com" >
                     </div>
-                        <div class="form-check">
-                            <label class="form-check-label">
-                            <input type="checkbox" class="form-check-input" id="check_password" >Parolni o'zgartirish </label>
+                        <div class="form-check form-check-info">
+                           <div class="checkbox">
+                            <label class="form-check-label" for="check_password">
+                              <input type="checkbox" class="form-check-input" id="check_password" >Parolni o'zgartirish </label>
+                           </div>
+                        </div>
                         <div class="form-group mt-3">
                           <input type="password" class="form-control form-control-lg " name="password1" id="exampleInputPassword1" placeholder="Yangi parol" required disabled>
                         </div>
                         <div class="form-group">
                           <input type="password" class="form-control form-control-lg" name="password2" id="exampleInputPassword2" placeholder="Parolni tasdiqlash" required disabled>
                         </div>
-                      </div>
                      
                       <div class="mt-3">
                         <button type="submit" class="btn btn-block btn-gradient-primary btn-lg font-weight-medium auth-form-btn" >O'zgartirish</button>

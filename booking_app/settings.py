@@ -24,9 +24,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&0chn#rtm0&xj3p_47f3yo6gxeku5zru4w7ktv4+zw#vdz!9g3'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+SSL_REDIRECT = True
+
+DEBUG = False
+
+if DEBUG:
+    from booking_app.locale_settings import *
+else:    
+    from booking_app.pro_settings import *
 
 AUTH_USER_MODEL = "main.User"
 
@@ -104,12 +110,7 @@ WSGI_APPLICATION = 'booking_app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+
 
 
 # Password validation

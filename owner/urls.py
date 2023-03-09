@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from django.conf.urls import handler404,handler500
 
 
 
@@ -20,8 +21,13 @@ urlpatterns = [
     path('room/update/<int:pk>',RoomUpdateView.as_view(),name = 'room_update'),
     path('brons/<int:pk>',BronView.as_view(),name = 'brons'),
     path('calendar/<int:pk>',calendar_view,name = 'calendar'),
-    path('add/bron/<int:pk>',BronAddView.as_view(),name = 'add_bron'),
+    path('add/bron/',BronAddView.as_view(),name = 'add_bron'),
     path('cancel/bron',BronCancelView.as_view(),name = 'cancel_bron'),
-    path('infoBrons', infoBrons,name='info_brons' )
+    path('infoBrons', InfoBrons.as_view(),name='info_brons'),
+    path('updateBron/<int:pk>', CalendarUpdateBron.as_view(),name='update_bron'),
+    path('get/room', get_room,name='get_room'),
+    
 
 ]
+handler404=handler_404
+handler500=handler_500

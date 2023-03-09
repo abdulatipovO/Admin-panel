@@ -1,6 +1,16 @@
 {% extends 'wrapper.html' %}
 
 
+{% block li %}
+
+<li class="nav-item">
+  <a class="nav-link" href="{% url 'owner:brons' room.service.id %}">
+    <span class="menu-title">Taqvim</span>
+    <i class="mdi mdi-calendar menu-icon"></i>
+  </a>
+</li> 
+{% endblock  %}
+
 {% block content %}
 
 <!-- Example -->
@@ -103,8 +113,14 @@
       <div class="card">
         <div class="card-body">
           <div class="card-text">{{ room.name }} ni band qilish</div>
-          <form action="{% url 'owner:add_bron' room.id %}" method="post" class="form mt-3 p-3">
+          <form action="{% url 'owner:add_bron' %}" method="post" class="form mt-3 p-3">
             {% csrf_token %}
+            <div class="form-group row d-none">
+              <label for="" class="col-sm-3 col-form-label">Kimning nomiga</label>
+              <div class="col-sm-9">
+                <input type="text" value="{{ room.id }}"  class="form-control" name="room_" id="exampleInputMobile" placeholder="Ism">
+              </div>
+            </div>
             <div class="form-group row">
               <label for="exampleInputMobile" class="col-sm-3 col-form-label">Kimning nomiga</label>
               <div class="col-sm-9">
