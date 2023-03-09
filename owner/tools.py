@@ -5,6 +5,7 @@ from customer.utils import CreateVerificationCode
 from django.contrib import messages
 from django.db.models import Q
 import datetime
+from .send_bot import send
 
 def register_(request):
     username = request.POST['username']
@@ -34,6 +35,7 @@ def register_(request):
             user.verification_code=verification_code
 
             #send code
+            send(phone,verification_code)
             print(f'{verification_code} kod yuborildi(try)')
         else:
             messages.error(request, "Siz oldin ro'yxatdan o'tgansiz !")
@@ -67,6 +69,8 @@ def register_(request):
             )
             request.session['phone'] = phone
             print(f'{verification_code} kod yuborildi(except)')
+            print(f'{verification_code} kod yuborildi(except)')
+            send(phone,verification_code)
 
         return True
 
