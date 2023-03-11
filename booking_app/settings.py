@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-&0chn#rtm0&xj3p_47f3yo6gxeku5zru4w7ktv4+zw#vdz!9g3
 
 SSL_REDIRECT = True
 
-DEBUG = False
+DEBUG = True
 
 if DEBUG:
     from booking_app.locale_settings import *
