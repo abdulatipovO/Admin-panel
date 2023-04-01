@@ -225,6 +225,10 @@ class InfoBrons(View):
         
         rooms = Room.objects.filter(service=pk)
         
+        print(rooms)
+        print(rooms)
+        print(rooms)
+        
         date_ = datetime.date(int(year),int(month),int(day))
         day = date_.strftime("%a")
         month = date_.strftime("%b")

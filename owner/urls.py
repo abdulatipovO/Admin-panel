@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import *
 from django.conf.urls import handler404,handler500
-from . import settings
+
 from django.views import static
 
 app_name = 'owner'
@@ -28,9 +28,6 @@ urlpatterns = [
     path('get/room', get_room,name='get_room'),
     
 ]
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler404=handler_404
 handler500=handler_500
