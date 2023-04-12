@@ -181,7 +181,7 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'owner:add_bron' %}">
                 <span class="menu-title">Bron qilish</span>
-                <i class="mdi mdi-home menu-icon"></i>
+                <i class="mdi mdi-book-plus menu-icon"></i>
               </a>
             </li>
             
@@ -205,13 +205,13 @@
             {% if message.tags == 'success' %}
             
               <div class="text-center alert alert-success alert-dismissible fade show msg" role="alert" >
-                <i class="bi bi-check-circle me-1"></i>
+                <i class="mdi mdi-check-circle me-1"></i>
                 {{ message }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
               </div>
             {% elif message.tags == 'error' %}
               <div class="text-center alert alert-danger alert-dismissible fade show msg" role="alert "   >
-                <i class="bi bi-x-circle me-1"></i>
+                <i class="mdi mdi-x-circle me-1"></i>
               {{ message }}
               <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>

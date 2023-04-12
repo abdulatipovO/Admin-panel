@@ -26,6 +26,8 @@ urlpatterns = [
     path('infoBrons', InfoBrons.as_view(),name='info_brons'),
     path('updateBron/<int:pk>', CalendarUpdateBron.as_view(),name='update_bron'),
     path('get/room', get_room,name='get_room'),
+    path('delete_room/<int:pk>/<int:id_room>' , DeleteRoomView.as_view() , name = "delete_room"),
+    path('delete_image/<int:pk>/<int:id_room>' , DeleteImageView.as_view() , name= "delete_image" ),
     
 ]
 

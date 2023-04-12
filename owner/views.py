@@ -150,11 +150,15 @@ def calendar_view(request, pk):
                     'title': f'{bron.room.name} { f }-{ e }',
                     'start': f"{bron.date}T{bron.time_from}",
                     'end': f"{bron.date}T{bron.time_to}",
-                    'className': 'success',
                     'allDay': False,
                 }
+                if (today.date() > bron.date) == False:
+                    event['className'] = 'success',
+                else:
+                    event['className'] = 'info',
+                    
                 events.append(event)
-        
+
     data  = {
         "data":events
     }
@@ -218,24 +222,21 @@ class BronCancelView(View):
 class InfoBrons(View):
     def get(self, request):
         pk = request.GET['pk']
-        day = request.GET['day']
-        month = request.GET['month']
-        year = request.GET['year']
+        day_ = request.GET['day']
+        month_ = request.GET['month']
+        year_ = request.GET['year']
         brons = infoBrons(request)
         
         rooms = Room.objects.filter(service=pk)
+
         
-        print(rooms)
-        print(rooms)
-        print(rooms)
-        
-        date_ = datetime.date(int(year),int(month),int(day))
+        date_ = datetime.date(int(year_),int(month_),int(day_))
         day = date_.strftime("%a")
         month = date_.strftime("%b")
          
         uz = uzbekWeekdays(date_)
     
-        d = request.session['date'] = f"pk={pk}&day={day}&month={month}&year={year}"
+        d = request.session['date'] = f"pk={pk}&day={day_}&month={month_}&year={year_}"
       
         return render(request, "detail_calendar.html",{"brons":brons, "rooms":rooms,"service_pk":pk, "date":date_, "day":uz[day], "month":uz[month]})
     
@@ -277,6 +278,22 @@ def get_room(request):
         
     
     return JsonResponse({"status":"ok","all_rooms":all_rooms})
+
+        
+class DeleteRoomView(View):
+    def get(self , request , pk , id_room):
+        room = delete_room(request , pk)
+        messages.add_message(request , messages.SUCCESS , "Xona muvaffaqiyatli o'chirildi !")
+        return redirect(f"/service/{id_room}")
+    
+class DeleteImageView(View):
+    def get(self , request , pk , id_room):
+        image = delete_image(request , pk)
+        # room = Room.objects.get(id = int(id_room))
+        messages.add_message(request , messages.SUCCESS , "Rasm muvaffaqiyatli o'chirildi !")
+        return redirect(f"/room/update/{id_room}")
+
+         
          
          
 

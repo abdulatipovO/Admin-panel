@@ -322,8 +322,26 @@ def infoBrons(request):
     month = request.GET['month']
     year = request.GET['year']
     date = datetime.date(int(year),int(month),int(day))
+    
+    l = []
+    rooms = Room.objects.filter(service=pk)
+    
     bron = Bron.objects.filter(room__service=pk, date=date)
-    return bron
+    bron = bron.exclude(status='cancelled')
+    
+    if bron.count() != 0:
+        
+        for r in rooms:
+            room = []
+            for b in bron:
+                if b.room.id == r.id:
+                    print(b)
+                    room.append(b)
+            if room != []:
+                l.append(room)
+        return l
+
+    return '[]'
 
 def updateBrons(request,pk):
     room_id = request.POST['room']
@@ -397,3 +415,10 @@ def uzbekWeekdays(date_):
     }
     
     return c
+
+def delete_room(request ,pk):
+    room = Room.objects.get(id = int(pk) ).delete()
+    return True
+def delete_image(request , pk):
+    image = RoomPhotos.objects.get(id = int(pk)).delete()
+    return True

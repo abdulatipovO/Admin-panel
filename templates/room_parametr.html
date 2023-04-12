@@ -30,38 +30,50 @@
   Launch demo modal
 </button> -->
 
-<!-- Modal -->
+<!-- room start -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">{{ room.name }} ni o'chirish.</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
+          <span aria-dal-content">
+           
+            <div class="modhidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        ...
+        <h5 class="text-info">{{ room.name }} ni o'chirishni xoxlaysizmi ?</h5> <br> <h5 class="text-danger">{{ room.name }} ga doir barcha bronlar bekor qilinadi !</h5>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+
+        <a href="{% url 'owner:delete_room' room.id room.service.id %}" style="text-decoration: none;"> <button type="button" class="btn btn-danger  me-2" data-toggle="modal">
+          Xa 
+        </button></a>
+        <button type="button" class="btn btn-primary  close" data-dismiss="modal" aria-label="Close"> Yoq</button>
+
       </div>
     </div>
   </div>
 </div>
+
+<!-- room end -->
+
+
+
      <div class="col-md-6 ">
       <div class="card">
     
         <div id="CarouselTest" class="carousel slide " data-ride="carousel">
-
+       
           <ol class="carousel-indicators">
             <li data-target="#CarouselTest" data-slide-to="0" class="active"></li>
             <li data-target="#CarouselTest" data-slide-to="1"></li>
             <li data-target="#CarouselTest" data-slide-to="2"></li>
           </ol>
-
+    
           <div class="carousel-inner" style="position:relative;">
+            {% if room.room_photos.all.count != 0 %}
             {% for i in room.room_photos.all %}
 
             {% if forloop.first %}
@@ -69,12 +81,18 @@
             {% else %}
             <div class="carousel-item">
             {% endif %}
-            <div class="foto" style="width: 650px; height: 350px;">
+            <div class="foto" style="width: 650px; height: 400px;">
               <!-- <a type="button" href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn mdi mdi-delete text-danger" style="font-size: 24px; position:absolute; right:20px; top:20px; background:rgba(0, 0, 0, 0.5); padding:5px; border-radius:5px;"></a> -->
-              <img class="d-block" src="{{ i.image.url }}" width="100%" height="100%" alt="">
+              <img class="d-block" src="{{ i.image.url }}" width="100%" height="auto" alt="" style="image-rendering: auto; object-fit: scale-down ; ">
             </div>
             </div>
             {% endfor %}
+            {% else %} 
+            <div class="foto" style="width: 650px; height: 400px;">
+              <!-- <a type="button" href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn mdi mdi-delete text-danger" style="font-size: 24px; position:absolute; right:20px; top:20px; background:rgba(0, 0, 0, 0.5); padding:5px; border-radius:5px;"></a> -->
+              <img class="d-block" src="http://via.placeholder.com/650x400" width="100%" height="auto" alt="" style="image-rendering: auto; object-fit: scale-down ; ">
+            </div>
+            {% endif %}
             
             
             <a class="carousel-control-prev" href="#CarouselTest" role="button" data-slide="prev">
@@ -89,8 +107,70 @@
         </div>
         </div>
 
-          <div class="card">
-            <div class="card-body">
+
+        <!-- image delete start -->
+        <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">{{ room.name }} ga yuklangan rasmlar ro'yxati </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-dal-content">
+                   
+                    <div class="modhidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                  
+            
+                <div class="container-fluid">
+                  <div class="row">
+                      <div class="col-12 mt-3" style="max-height:50vh; overflow-y: scroll;">
+                        {% for i in room.room_photos.all %}
+                          <div class="card mt-3" >
+                              <div class="card-horizontal">
+                                  <div class="img-square-wrapper">
+                                    <img class="" src="{{ i.image.url }}" alt="Card image cap" style="width:150px; height:120px;">
+                                  </div>
+                                  <div class="card-body text-center mt-2">
+                                    <form action="#" method="post">
+                                      {% csrf_token %}
+
+                                      <a href="{% url 'owner:delete_image' i.id room.id %}" class="card-title text-danger " style="text-decoration: none;">O'chirish <i class="mdi mdi-delete"></i></a>
+
+                                    </form>
+                                  </div>
+                              </div>
+                              
+                            </div>
+                            {% endfor %}
+                      </div>
+                  </div>
+              </div>
+           
+              </div>
+              <div class="modal-footer">
+                
+                <!-- <a href="#">  <button type="button" class="btn btn-danger  me-2" data-toggle="modal">
+                  Xa 
+                </button></a> -->
+                <button type="button" class="btn btn-primary  close" data-dismiss="modal" aria-label="Close">Orqaga</button>
+        
+              </div>
+            </div>
+          </div>
+        </div>
+   
+        <!-- image delete end -->
+
+        
+        
+        <div class="card">
+          <div class="card-body">
+              {% if room.room_photos.all.count != 0 %}
+              <button type="button" class="btn btn-gradient-danger m-3" data-toggle="modal" data-target="#exampleModal2" style="float:right; ">Rasmni o'chirish<i class="icon-lg mdi mdi-delete" ></i></button>
+              {% else %}
+              {% endif %}
               <form action="" method="post" class="form mb-5" enctype='multipart/form-data'>{% csrf_token %}
                 <input type='file' id="getFile" name="image" >
                 <button type="submit" class="btn btn-gradient-success   ml-5">Yuklash <i class="icon-lg mdi mdi-upload"></i></button>
@@ -190,8 +270,10 @@
 
         </div>
 
-            </div>
-            
+      </div>
+      <button type="button" class="btn btn-gradient-danger mdi mdi-delete me-2 mt-4" data-toggle="modal" data-target="#exampleModal" style="float: right; width:250px;" >
+        Xonani o'chirish
+      </button>
         </div>
         </div>
       </div>
@@ -245,6 +327,10 @@
 
 .btn {
   margin-top: auto;
+}
+.card-horizontal {
+  display: flex;
+  flex: 1 1 auto;
 }
 </style>
 

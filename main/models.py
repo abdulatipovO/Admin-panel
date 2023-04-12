@@ -74,13 +74,13 @@ class ServicePhotos(models.Model):
 
 
 class Bron(models.Model):
-    room = models.ForeignKey(Room, on_delete=models.PROTECT, related_name='room_brons')
+    room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='room_brons')
     customer = models.ForeignKey(User, on_delete=models.PROTECT, related_name='user_brons')
     date = models.DateField("sana")
     time_from = models.TimeField(blank=True)
     time_to = models.TimeField(blank=True)
     status = models.CharField("Statusi",choices=BronStatus.choices, max_length=20,default=BronStatus.waiting)
-    canceller = models.CharField("Bronni bekor qiluvchi",choices=CancellerType.choices,
+    canceller = models.CharField("Bronni bekor qiluvchi"    ,choices=CancellerType.choices,
     max_length=20,blank=True, null=True)
     cancel_date = models.DateTimeField(blank=True, null=True)
     name = models.CharField("Kimni nomiga", max_length=50, null=True, blank=True)

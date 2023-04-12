@@ -22,7 +22,7 @@
 
     <a href="#" onclick="addBiznes('open_room')" class="btn btn-rounded bg-gradient-success text-white mb-3" style="width: 20%; ">Xona qo'shish <i class="mdi mdi-plus-circle-outline"></i></a>
     <div class="row">
-        <div class="col-md-8 card-scroll" style="overflow-y: scroll; max-height:590px;">
+        <div class="col-md-8 card-scroll" style="overflow-y: scroll; max-height:650px;">
             
             {% for r in rooms %}
                               
@@ -32,7 +32,7 @@
                   <div class="col-md-4 p-1">
                    <div class="foto-detail p-2"  >
                     {% if r.room_photos.all.0.image.url %}
-                    <img src="{{  r.room_photos.all.0.image.url }}" width="100%" height="100%" class="img-fluid rounded-start" alt="">
+                    <img src="{{  r.room_photos.all.0.image.url }}" width="100%" height="100%"  class="img-fluid rounded-start " alt="">
                     {% else %}
                     <img src="/media/room_photos/7bcb2df2c6c93fb062bb90efaeb5ea9c.jpg"  class="img-fluid rounded-start" alt="">
 
@@ -55,8 +55,8 @@
                       <p class="card-text mt-3 ">
                           {% for b in r.room_brons.all %}
 
-                          {% if b.status == 'cancelled' %}
-                          {% else %}
+                            {% if b.status == 'cancelled' %}
+                            {% else %}
                           {% if b.date == today %}
                           <small class="text-danger d-block"> {{ b.time_from | date:"H:i" }} dan  {{ b.time_to | date:"H:i" }} gacha band </small>
                           {% else %}
@@ -71,6 +71,7 @@
 
 
                 </div>
+                
                 <div class="accordion accordion-flush " id="accordionFlushExample-{{ r.id }}">
                   <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingOne">
@@ -163,7 +164,7 @@
                           </tbody>
                         
                         </table>
-                        <div class="text-center table-msg d-none">
+                        <div class="text-center table-msg-{{ r.id }} " style="display:none;">
                           <small >Ushbu sanada bronlar mavjud emas !</small>
                         </div>
 
@@ -430,8 +431,9 @@
   function filterRows2(id) {
     var from = document.getElementById(`datefilter-${id}`).value;
     let tr_id = document.querySelectorAll(`.tr-${id}`);
-    
-    
+    let acc = document.querySelector(".accordion-body");
+    let number = 0
+
     if (!from) { // no value for from and to
         return;
       }
@@ -449,10 +451,22 @@
             $(element).css('display', 'none');
             
           }else{
-            $(element).css('display', '');
+            number += 1
+            $(element).css('display', '');1
   
           }
+      
       });
+      if (number === 0){
+        $('.testTable').css('display', 'none')
+        $(`.table-msg-${id}`).css('display', '')
+        
+        
+      }else{
+        $('.testTable').css('display', '')
+        $(`.table-msg-${id}`).css('display', 'none')
+
+      }
      
 
     }
@@ -461,6 +475,7 @@
     window.onload = function filterRows() {
       let date = document.querySelectorAll('.cal-date');
       var today = new Date();
+      let number = 0
       
       
       let from = 0
@@ -487,10 +502,14 @@
  
           
         }else{
+   
           $(tr).css('display', '');
         
         }
       });
+
+    
+
     }
     
 
