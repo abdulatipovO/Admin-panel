@@ -109,7 +109,7 @@
 					selectHelper: true,
 					select: function(start, end, allDay) {
 						month = start.getMonth() + 1
-						window.location.href = `/infoBrons?pk=3&day=${start.getDate()}&month=${month}&year=${start.getFullYear()}`
+						window.location.href = `/infoBrons?pk=${pk}&day=${start.getDate()}&month=${month}&year=${start.getFullYear()}`
 						calendar.fullCalendar('unselect');
 					},
 					droppable: true, // this allows things to be dropped onto the calendar !!!
