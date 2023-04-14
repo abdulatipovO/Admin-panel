@@ -185,8 +185,13 @@ class BronAddView(View):
     def post(self, request):
         
         bron = addBron(request)
-        if bron[0] == True:
+        if bron[2] == False:
+            messages.error(request, f"Xatolik !  Bizning xizmat ko'rsatish vaqtimiz {str(bron[1].service.working_time_from)[:5]} dan {str(bron[1].service.working_time_to)[:5]} gacha")
+        elif bron[0] == True:
             messages.success(request, "Xona muvaffaqiyatli band qilindi !")
+        elif bron[0] == False:
+            messages.error(request, "Vaqtni belgilashda xatolik !")
+
         else:
             for i in bron:
                 messages.error(request, f"Ushbu xona {i.date} kuni {str(i.time_from)[:5]} dan {str(i.time_to)[:5]} gacha band !")
@@ -254,12 +259,16 @@ class CalendarUpdateBron(View):
         d = request.session['date']
         
         update_bron = updateBrons(request,pk)
+        
+        if update_bron == "error":
+            messages.error(request, "Xatolik !  Kiritilgan vaqt xizmat ko'rsatish vaqtiga to'g'ri kelmadi !")
+      
         if update_bron == True:
             messages.success(request, "Muvaffaqiyatli o'zgartirildi !")
         elif update_bron == False:
             messages.error(request, "Vaqtni belgilashda xatolik !")
-        else:
-            messages.error(request, "Band qilingan! Boshqa vaqtni tanlang")
+        # else:
+        #     messages.error(request, "Band qilingan! Boshqa vaqtni tanlang")
             
         
         return redirect(f"/infoBrons?{d}")

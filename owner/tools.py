@@ -239,6 +239,13 @@ def addBron(request):
     time_from = request.POST['bron_time_from']
     time_to = request.POST['bron_time_to']
     date = request.POST['date']
+    
+    if str(room.service.working_time_from)[:2] < str(time_from[:2]) or str(room.service.working_time_to)[:2] > str(time_to[:2]):
+        return ["error", room, False]
+        
+    if int(time_from[:2]) >= int(time_to[:2]):
+        return [False,room]
+        
 
     bron = Bron.objects.filter(
                         Q(room=room,date=date, time_from__range=(time_from[:4]+'1',time_to),status='waiting' )
@@ -351,10 +358,15 @@ def updateBrons(request,pk):
     time_to = request.POST['bron_time_to']
     date = request.POST['date']
     
+    room = Room.objects.filter(id=room_id)[0]
+    
+    if str(room.service.working_time_from)[:2] < str(time_from[:2]) or str(room.service.working_time_to)[:2] > str(time_to[:2]):
+        return "error"
+    
+    
     if int(time_from[:2]) >= int(time_to[:2]):
         return False
 
-    room = Room.objects.filter(id=room_id)[0]
     
     update_bron = Bron.objects.get(id=pk)   
 
